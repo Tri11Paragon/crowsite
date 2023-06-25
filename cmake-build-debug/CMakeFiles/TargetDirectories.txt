@@ -1,0 +1,6 @@
+/home/brett/projects/cpp/crowsite/cmake-build-debug/CMakeFiles/crowsite.dir
+/home/brett/projects/cpp/crowsite/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/brett/projects/cpp/crowsite/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/CMakeFiles/BLT.dir
+/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/CMakeFiles/edit_cache.dir
+/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/CMakeFiles/rebuild_cache.dir

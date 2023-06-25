@@ -1,0 +1,3 @@
+[submodule "libs/BLT"]
+	path = libs/BLT
+	url = https://github.com/Tri11Paragon/blt.git

@@ -1,0 +1,3 @@
+Normal mushtash templates apply
+but putting $ infront of the var name will be treated at load time (page compile time) 
+

@@ -1,0 +1,9 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=MinSizeRel -DCMAKE_MAKE_PROGRAM=/opt/clion/bin/ninja/linux/x64/ninja -G Ninja -S /home/brett/projects/cpp/crowsite -B /home/brett/projects/cpp/crowsite/cmake-build-minsizerel
+Standard Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/filesystem.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/format.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/loader.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/logging.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/system.cpp
+Profiler Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/profiling/profiler.cpp
+Source: /home/brett/projects/cpp/crowsite
+Current Source: /home/brett/projects/cpp/crowsite/libs/BLT
+BLT 0.0.1 Successfully included!
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/brett/projects/cpp/crowsite/cmake-build-minsizerel
