@@ -2,19 +2,30 @@
 #include <crowsite/crow_includes.h>
 #include <blt/std/logging.h>
 #include <crowsite/utility.h>
-#include <crowsite/site/web.h>
+#include <crowsite/site/cache.h>
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    
+    BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
     
+    BLT_INFO("Init Crow with compression and logging enabled!");
     crow::SimpleApp app;
     app.use_compression(crow::compression::GZIP);
     app.loglevel(crow::LogLevel::INFO);
     
+    BLT_INFO("Creating static context");
+    
     cs::StaticContext context;
-    cs::loadHTMLPage(cs::fs::createWebFilePath("index.html"))->render(context);
+    context["SITE_TITLE"] = SITE_TITLE;
+    context["SITE_NAME"] = SITE_NAME;
+    context["SITE_VERSION"] = SITE_VERSION;
+    
+    BLT_INFO("Starting cache engine");
+    
+    cs::CacheSettings settings;
+    cs::CacheEngine engine(context, settings);
+    
+    BLT_INFO("Creating routes");
     
     CROW_ROUTE(app, "/favicon.ico")([](crow::response& local_fav_res) {
         local_fav_res.compressed = false;
@@ -25,10 +36,14 @@ int main() {
     
     CROW_ROUTE(app, "/<string>")(
             [&](const std::string& name) {
-                auto page = crow::mustache::load("index.html"); //
+                //auto page = crow::mustache::load("index.html"); //
                 //return "<html><head><title>Hello There</title></head><body><h1>Suck it " + name + "</h1></body></html>";
                 crow::mustache::context ctx({{"person", name}});
-                return page.render(ctx);
+                auto user_page = crow::mustache::compile(engine.fetch("index.html"));
+                
+                //BLT_TRACE(page);
+                
+                return user_page.render(ctx);
             }
     );
     

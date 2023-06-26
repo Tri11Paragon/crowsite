@@ -17,5 +17,8 @@ using hashmap = std::unordered_map<K, V, HASH>;
 #define MILES_SITE
 #undef MILES_SITE
 
+#define SITE_NAME "CrowTest"
+#define SITE_TITLE "Miles and Brett Super Site"
+#define SITE_VERSION "0.0.1"
 
 #endif //CROWSITE_CONFIG_H

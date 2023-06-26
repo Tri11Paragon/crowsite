@@ -31,19 +31,25 @@ namespace cs {
     
     class HTMLPage {
         private:
-            static constexpr std::string opening = "{{$";
-            static constexpr std::string closing = "}}";
-            
-            std::string rawSite;
-            std::string processedSite;
-            
-            void throwSyntaxError(size_t begin);
-        public:
+            std::string m_SiteData;
             explicit HTMLPage(std::string siteData);
+        public:
+            static std::unique_ptr<HTMLPage> load(const std::string& path);
+            /**
+             * Attempts to resolve linked resources like CSS and JS in order to speedup page loading.
+             */
+            void resolveResources();
+            /**
+             * Uses the static context provided to resolve known variables before user requests
+             * @param context context to use
+             * @return string containing resolved static templates
+             */
             std::string render(StaticContext& context);
+            
+            inline std::string const& getRawSite() {
+                return m_SiteData;
+            }
     };
-    
-    std::unique_ptr<HTMLPage> loadHTMLPage(const std::string& path);
     
 }
 
