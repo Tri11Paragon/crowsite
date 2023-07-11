@@ -1,0 +1,25 @@
+/usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/opt/clion/bin/ninja/linux/x64/ninja -DENABLE_ADDRSAN:BOOL=ON -DENABLE_UBSAN:BOOL=ON -G Ninja -S /home/brett/projects/cpp/crowsite -B /home/brett/projects/cpp/crowsite/cmake-build-debug-address
+-- The C compiler identification is GNU 13.1.1
+-- The CXX compiler identification is GNU 13.1.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found Boost: /usr/lib/cmake/Boost-1.81.0/BoostConfig.cmake (found suitable version "1.81.0", minimum required is "1.64") found components: system date_time 
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+Standard Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/filesystem.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/format.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/loader.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/logging.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/string.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/system.cpp
+Profiler Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/profiling/profiler.cpp
+Source: /home/brett/projects/cpp/crowsite
+Current Source: /home/brett/projects/cpp/crowsite/libs/BLT
+BLT 0.0.1 Successfully included!
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/brett/projects/cpp/crowsite/cmake-build-debug-address

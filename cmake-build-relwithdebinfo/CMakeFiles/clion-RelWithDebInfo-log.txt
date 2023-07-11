@@ -1,5 +1,5 @@
 /usr/bin/cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_MAKE_PROGRAM=/opt/clion/bin/ninja/linux/x64/ninja -G Ninja -S /home/brett/projects/cpp/crowsite -B /home/brett/projects/cpp/crowsite/cmake-build-relwithdebinfo
-Standard Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/filesystem.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/format.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/loader.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/logging.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/system.cpp
+Standard Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/filesystem.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/format.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/loader.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/logging.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/string.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/system.cpp
 Profiler Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/profiling/profiler.cpp
 Source: /home/brett/projects/cpp/crowsite
 Current Source: /home/brett/projects/cpp/crowsite/libs/BLT

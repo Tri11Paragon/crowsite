@@ -1,10 +1,65 @@
 #include <iostream>
 #include <crowsite/crow_includes.h>
 #include <blt/std/logging.h>
+#include <blt/std/string.h>
+#include <blt/profiling/profiler.h>
+#include <sstream>
 #include <crowsite/utility.h>
 #include <crowsite/site/cache.h>
 
 int main() {
+//    blt::string::StringBuffer buffer;
+//    std::stringstream stream;
+//    std::string normalString;
+//    std::string normalStringReserved;
+//
+//    const int bufferSize = 12030;
+//    const int runCount = 1024;
+//    const char chars[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+//
+//    for (int _ = 0; _ < runCount; _++) {
+//        BLT_START_INTERVAL("Writing", "StringBuffer");
+//        for (int i = 0; i < bufferSize; i++)
+//            buffer << chars[i % 26];
+//        BLT_END_INTERVAL("Writing", "StringBuffer");
+//
+//        BLT_START_INTERVAL("Trim", "StringBuffer");
+//        auto bs = buffer.str();
+//        BLT_END_INTERVAL("Trim", "StringBuffer");
+//
+//        BLT_START_INTERVAL("Writing", "NormalString");
+//        for (int i = 0; i < bufferSize; i++)
+//            normalString += chars[i % 26];
+//        BLT_END_INTERVAL("Writing", "NormalString");
+//
+//        BLT_START_INTERVAL("Writing", "NormalStringReserved");
+//        for (int i = 0; i < bufferSize; i++)
+//            normalStringReserved += chars[i % 26];
+//        BLT_END_INTERVAL("Writing", "NormalStringReserved");
+//
+//        BLT_START_INTERVAL("Writing", "StringStream");
+//        for (int i = 0; i < bufferSize; i++)
+//            stream << chars[i % 26];
+//        BLT_END_INTERVAL("Writing", "StringStream");
+//
+//        BLT_START_INTERVAL("Trim", "StringStream");
+//        auto ss = stream.str();
+//        BLT_END_INTERVAL("Trim", "StringStream");
+//
+//        for (size_t i = 0; i < bs.size(); i++){
+//            if (bs[i] != ss[i]){
+//                BLT_ERROR("String length %d vs %d", bs.size(), ss.size());
+//                BLT_ERROR("String has an error at pos %d. expected %c got %c", i, ss[i], bs[i]);
+//                return 1;
+//            }
+//        }
+//    }
+//
+//    BLT_PRINT_PROFILE("Writing", blt::logging::BLT_NONE, true);
+//    BLT_PRINT_PROFILE("Trim", blt::logging::BLT_NONE, true);
+//
+//    return 0;
+    
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
     

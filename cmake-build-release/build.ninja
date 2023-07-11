@@ -165,6 +165,13 @@ build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o: CXX_COMPILER__BLT_u
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
 
+build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o: CXX_COMPILER__BLT_unscanned_Release /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/string.cpp || cmake_object_order_depends_target_BLT
+  DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-release/libs/BLT/config
+  OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
+  OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
+
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o: CXX_COMPILER__BLT_unscanned_Release /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/system.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o.d
   FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
@@ -201,7 +208,7 @@ build libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o: CXX_COMPILER__BLT
 #############################################
 # Link the static library libs/BLT/libBLT.a
 
-build libs/BLT/libBLT.a: CXX_STATIC_LIBRARY_LINKER__BLT_Release libs/BLT/CMakeFiles/BLT.dir/src/blt/std/filesystem.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/format.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/loader.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling/profiler.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o
+build libs/BLT/libBLT.a: CXX_STATIC_LIBRARY_LINKER__BLT_Release libs/BLT/CMakeFiles/BLT.dir/src/blt/std/filesystem.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/format.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/loader.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling/profiler.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o
   LANGUAGE_COMPILE_FLAGS = -O3 -DNDEBUG
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   POST_BUILD = :

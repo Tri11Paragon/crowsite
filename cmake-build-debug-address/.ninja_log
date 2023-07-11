@@ -1,0 +1,23 @@
+# ninja log v5
+501	597	1688943305552846100	libs/BLT/libBLT.a	ad478582d83a475b
+1	979	1688941563654842800	libs/BLT/CMakeFiles/BLT.dir/src/blt/std/loader.cpp.o	55fc9036081ff886
+4	1546	1688941625951162300	CMakeFiles/crowsite.dir/src/crowsite/site/cache.cpp.o	a75b368ea91a7aa5
+4	6365	1688943311316753200	CMakeFiles/crowsite.dir/src/main.cpp.o	684374ea9454efe3
+6366	6546	1688943311500970400	crowsite	116e60fa83b41baf
+2	764	1688941563440758500	libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt.cpp.o	7406899df639b1b0
+4	500	1688943305457223900	libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o	b8d9855ebc28dec7
+2	843	1688941563519186700	libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o	4507475e727f95a7
+4	1429	1688941625833068100	CMakeFiles/crowsite.dir/src/crowsite/site/web.cpp.o	2e1faedf6beda402
+1	635	1688941563306059600	libs/BLT/CMakeFiles/BLT.dir/src/blt/std/filesystem.cpp.o	1f7304ee64edb2b
+4	1187	1688941625590873300	CMakeFiles/crowsite.dir/src/crowsite/utility.cpp.o	c776b1cd82477fac
+1	1327	1688941564002983400	libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o	ecd1b3a71f14b739
+2	1413	1688941564087980700	libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling/profiler.cpp.o	4228135598294f3a
+2	629	1688941563305725100	libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o	29215e1393d4f4d4
+1	753	1688941563429737800	libs/BLT/CMakeFiles/BLT.dir/src/blt/std/format.cpp.o	f8a62c6a6c31deed
+4	1220	1688943383152285000	CMakeFiles/crowsite.dir/src/crowsite/utility.cpp.o	ff27cd23fd63751c
+4	1529	1688943383461355200	CMakeFiles/crowsite.dir/src/crowsite/site/web.cpp.o	6bbea827f92416f9
+4	1616	1688943383548983900	CMakeFiles/crowsite.dir/src/crowsite/site/cache.cpp.o	840c1b83b5210a7
+4	7223	1688943389151049900	CMakeFiles/crowsite.dir/src/main.cpp.o	434b78a9c46bdbae
+7224	7446	1688943389377736900	crowsite	21e534a3c39281fe
+4	6898	1688943875196756300	CMakeFiles/crowsite.dir/src/main.cpp.o	434b78a9c46bdbae
+6899	7140	1688943875447745200	crowsite	21e534a3c39281fe

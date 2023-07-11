@@ -78,16 +78,16 @@ namespace cs {
     }
     
     void CacheEngine::prune(uint64_t amount) {
-        struct CacheSortingValue {
+        struct CacheSorting_t {
             uint64_t memoryUsage;
             std::string key;
         };
         
-        std::vector<CacheSortingValue> cachedPages;
+        std::vector<CacheSorting_t> cachedPages;
         for (auto& page : m_Pages)
             cachedPages.emplace_back(calculateMemoryUsage(page.first, page.second), page.first);
         
-        std::sort(cachedPages.begin(), cachedPages.end(), [&](const CacheSortingValue& i1, const CacheSortingValue& i2) -> bool {
+        std::sort(cachedPages.begin(), cachedPages.end(), [&](const CacheSorting_t& i1, const CacheSorting_t& i2) -> bool {
             return m_Pages[i1.key].cacheTime < m_Pages[i2.key].cacheTime;
         });
         
