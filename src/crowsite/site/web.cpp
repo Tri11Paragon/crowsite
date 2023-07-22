@@ -5,10 +5,10 @@
 #include <fstream>
 #include <ios>
 #include <blt/std/logging.h>
-#include <boost/algorithm/string/replace.hpp>
 
 #include <utility>
 #include <sstream>
+#include <algorithm>
 
 namespace cs {
     
@@ -143,10 +143,7 @@ namespace cs {
                                             }
                                     ) == context.end()) {
                                         // unable to find the token, we should throw an error to tell the user! (or admin in this case)
-                                        BLT_WARN("Unable to find token '%s'!");
-                                        throw LexerException(
-                                                "Unable to find token in static context!"
-                                        );
+                                        BLT_WARN("Unable to find token '%s'!", tokenString.c_str());
                                     } else
                                         buffer += context[tokenString];
                                     break;
@@ -164,12 +161,6 @@ namespace cs {
                     break;
             }
         }
-
-//        for (auto& v : context){
-//            if (v.first.starts_with('$'))
-//                throw SyntaxException();
-//            //boost::replace_all(processedSiteData, "{{$" + v.first + "}}", v.second);
-//        }
         
         return buffer;
     }

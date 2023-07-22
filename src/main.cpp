@@ -6,6 +6,7 @@
 #include <sstream>
 #include <crowsite/utility.h>
 #include <crowsite/site/cache.h>
+#include <crowsite/beemovie.h>
 
 int main() {
 //    blt::string::StringBuffer buffer;
@@ -74,6 +75,7 @@ int main() {
     context["SITE_TITLE"] = SITE_TITLE;
     context["SITE_NAME"] = SITE_NAME;
     context["SITE_VERSION"] = SITE_VERSION;
+    context["BEE_MOVIE"] = beemovie_script;
     
     BLT_INFO("Starting cache engine");
     
@@ -111,8 +113,8 @@ int main() {
     );
     
     CROW_CATCHALL_ROUTE(app)(
-            []() {
-                return "World's Sexyest Man";
+            [&engine]() {
+                return engine.fetch("default.html");
             }
     );
     

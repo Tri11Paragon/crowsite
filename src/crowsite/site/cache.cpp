@@ -35,29 +35,40 @@ namespace cs {
     }
     
     const std::string& CacheEngine::fetch(const std::string& path) {
-        auto memory = calculateMemoryUsage();
-        
-        if (memory > m_Settings.hardMaxMemory) {
-            BLT_WARN("Hard memory limit was reached! Pruning to soft limit now!");
-            prune(
-                    m_Settings.hardMaxMemory - m_Settings.softMaxMemory
-                    + memory - m_Settings.hardMaxMemory
-            );
-        }
-        
-        if (memory > m_Settings.softMaxMemory) {
-            auto amount = std::min(m_Settings.softPruneAmount, memory - m_Settings.softMaxMemory);
-            BLT_INFO("Soft memory limit was reached! Pruning %d bytes of memory", amount);
-            prune(amount);
-        }
-        
-        BLT_TRACE("Page storage memory usage: %fkb", memory / 1024.0);
-        
+        bool load = false;
         auto find = m_Pages.find(path);
         if (find == m_Pages.end()){
-            BLT_DEBUG("Page (%s) was not found in cache, loading now!", path.c_str());
+            BLT_DEBUG("Page '%s' was not found in cache, loading now!", path.c_str());
+            load = true;
+        } else {
+            auto lastWrite = std::filesystem::last_write_time(cs::fs::createWebFilePath(path));
+            if (lastWrite != m_Pages[path].lastModified) {
+                load = true;
+                BLT_DEBUG("Page '%s' has been modified! Reloading now!", path.c_str());
+            }
+        }
+        
+        if (load) {
+            auto memory = calculateMemoryUsage();
+            
+            if (memory > m_Settings.hardMaxMemory) {
+                BLT_WARN("Hard memory limit was reached! Pruning to soft limit now!");
+                prune(
+                        m_Settings.hardMaxMemory - m_Settings.softMaxMemory
+                        + memory - m_Settings.hardMaxMemory
+                );
+            }
+            
+            if (memory > m_Settings.softMaxMemory) {
+                auto amount = std::min(m_Settings.softPruneAmount, memory - m_Settings.softMaxMemory);
+                BLT_INFO("Soft memory limit was reached! Pruning %d bytes of memory", amount);
+                prune(amount);
+            }
+            
+            BLT_TRACE("Page storage memory usage: %fkb", memory / 1024.0);
             loadPage(path);
         }
+        
         BLT_INFO("Fetched page %s", path.c_str());
         return m_Pages[path].renderedPage;
     }
@@ -65,10 +76,12 @@ namespace cs {
     void CacheEngine::loadPage(const std::string& path) {
         auto start = blt::system::getCurrentTimeNanoseconds();
         
-        auto page = HTMLPage::load(cs::fs::createWebFilePath(path));
+        auto fullPath = cs::fs::createWebFilePath(path);
+        auto page = HTMLPage::load(fullPath);
         auto renderedPage = page->render(m_Context);
         m_Pages[path] = CacheValue{
                 blt::system::getCurrentTimeNanoseconds(),
+                std::filesystem::last_write_time(fullPath),
                 std::move(page),
                 renderedPage
         };

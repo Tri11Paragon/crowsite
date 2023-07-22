@@ -6,6 +6,7 @@
 #define CROWSITE_CACHE_H
 
 #include <crowsite/site/web.h>
+#include <filesystem>
 
 namespace cs {
     
@@ -24,6 +25,7 @@ namespace cs {
         private:
             struct CacheValue {
                 int64_t cacheTime;
+                std::filesystem::file_time_type lastModified;
                 std::unique_ptr<HTMLPage> page;
                 std::string renderedPage;
             };
