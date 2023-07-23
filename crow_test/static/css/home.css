@@ -1,0 +1,22 @@
+div.center {
+    display: flex;
+    justify-content: center;
+}
+
+div.body {
+    width: 40%;
+    min-height: 200px;
+    background-color: white;
+    border: 3px solid;
+    border-color: #000033;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+div.titlebar {
+    display: inline-flex;
+}
+
+body {
+    background-color: gray;
+}

@@ -1,9 +1,25 @@
 /usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=/opt/clion/bin/ninja/linux/x64/ninja -G Ninja -S /home/brett/projects/cpp/crowsite -B /home/brett/projects/cpp/crowsite/cmake-build-release
+CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.5 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
+CMake Deprecation Warning at libs/BLT/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.5 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value or use a ...<max> suffix to tell
+  CMake that the project does not need compatibility with older versions.
+
+
 Standard Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/filesystem.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/format.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/loader.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/logging.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/string.cpp;/home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/system.cpp
 Profiler Files /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/profiling/profiler.cpp
 Source: /home/brett/projects/cpp/crowsite
 Current Source: /home/brett/projects/cpp/crowsite/libs/BLT
 BLT 0.0.1 Successfully included!
--- Configuring done (0.0s)
+-- Configuring done (0.1s)
 -- Generating done (0.0s)
 -- Build files have been written to: /home/brett/projects/cpp/crowsite/cmake-build-release

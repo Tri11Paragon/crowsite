@@ -1,0 +1,8 @@
+[18:21:56] [INFO] (main.cpp:64) Starting site CrowTest.
+[18:21:56] [INFO] (main.cpp:67) Init Crow with compression and logging enabled!
+[18:21:56] [INFO] (main.cpp:72) Creating static context
+[18:21:56] [INFO] (main.cpp:80) Starting cache engine
+[2023-06-22 18:23:38] [INFO] (main.cpp:65) Starting site CrowTest.
+[2023-06-22 18:23:38] [INFO] (main.cpp:68) Init Crow with compression and logging enabled!
+[2023-06-22 18:23:38] [INFO] (main.cpp:73) Creating static context
+[2023-06-22 18:23:38] [INFO] (main.cpp:81) Starting cache engine

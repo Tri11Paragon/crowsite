@@ -9,6 +9,7 @@
 #include <crowsite/beemovie.h>
 
 int main() {
+    blt::logging::setLogOutputFormat("\033[94m[${{FULL_TIME}}]${{RC}} ${{LF}}[${{LOG_LEVEL}}]${{RC}} \033[35m(${{FILE}}:${{LINE}})${{RC}} ${{CNR}}${{STR}}${{RC}}\n");
 //    blt::string::StringBuffer buffer;
 //    std::stringstream stream;
 //    std::string normalString;
@@ -92,9 +93,12 @@ int main() {
     });
     
     CROW_ROUTE(app, "/<string>")(
-            [&](const std::string& name) {
+            [&](const std::string& name) -> crow::response {
                 //auto page = crow::mustache::load("index.html"); //
                 //return "<html><head><title>Hello There</title></head><body><h1>Suck it " + name + "</h1></body></html>";
+                if (name.ends_with(".html"))
+                    return {engine.fetch(name)};
+                
                 crow::mustache::context ctx({{"person", name}});
                 auto user_page = crow::mustache::compile(engine.fetch("index.html"));
                 
@@ -111,6 +115,10 @@ int main() {
                 return "Portabella Mushrooms! " + pp.dump();
             }
     );
+    
+    CROW_ROUTE(app, "/")([&engine]() {
+        return engine.fetch("home.html");
+    });
     
     CROW_CATCHALL_ROUTE(app)(
             [&engine]() {

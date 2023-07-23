@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{$SITE_TITLE}}</title>
+    <style>
+        .superhead {
+            font-style: oblique;
+            font-size: 25px;
+            color: beige;
+            text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;
+        }
+        .gradient {
+            padding: 15px;
+            display: inherit;
+            background: rgb(93,17,112);
+            background: linear-gradient(90deg, rgba(93,17,112,1) 0%, rgba(128,69,203,1) 30%, rgba(1,132,172,1) 67%, rgba(0,212,255,1) 100%); 
+            box-shadow: 0px 2px 5px 0px #333333;
+            border: 1px;
+            border-radius: 10px;
+            border-style: solid;
+            border-color: #222222;
+        }
+        .superhead::first-letter {
+            font-family: cursive;
+            font-size: 50px;
+            font-weight: bold;
+            color: brown;
+            padding-right: 6px;
+        }
+    </style>
+  </head>
+  <body style="background-image: url('/static/images/dancing-skeleton.gif'); background-repeat: repeat; background-position: center;">
+    <div style="display: flex; justify-content: center; justify-items: center;">
+        <div style="display: block;">
+            <div style="display: flex; justify-content: center;">
+                <img style="border-radius: 10%; box-shadow: 0px 2px 5px 0px #000000;" src="/static/images/aphex.png" alt="Ur Mom" width="512" height="512">
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <p style="width: 50%;" class="superhead gradient">{{$BEE_MOVIE}}</p>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <p>404 Page Not Found</p>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
