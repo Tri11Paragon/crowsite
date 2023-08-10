@@ -32,7 +32,7 @@ namespace cs {
             
             StaticContext& m_Context;
             CacheSettings m_Settings;
-            hashmap<std::string, CacheValue> m_Pages;
+            HASHMAP<std::string, CacheValue> m_Pages;
             
             static uint64_t calculateMemoryUsage(const std::string& path, const CacheValue& value);
             /**

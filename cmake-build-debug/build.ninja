@@ -49,11 +49,27 @@ cmake_ninja_workdir = /home/brett/projects/cpp/crowsite/cmake-build-debug/
 
 build cmake_object_order_depends_target_crowsite: phony || cmake_object_order_depends_target_BLT
 
+build CMakeFiles/crowsite.dir/src/crowsite/requests/curl.cpp.o: CXX_COMPILER__crowsite_unscanned_Debug /home/brett/projects/cpp/crowsite/src/crowsite/requests/curl.cpp || cmake_object_order_depends_target_crowsite
+  DEFINES = -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -D_CROW_ICD-NOTFOUND
+  DEP_FILE = CMakeFiles/crowsite.dir/src/crowsite/requests/curl.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap
+  OBJECT_DIR = CMakeFiles/crowsite.dir
+  OBJECT_FILE_DIR = CMakeFiles/crowsite.dir/src/crowsite/requests
+
+build CMakeFiles/crowsite.dir/src/crowsite/requests/jellyfin.cpp.o: CXX_COMPILER__crowsite_unscanned_Debug /home/brett/projects/cpp/crowsite/src/crowsite/requests/jellyfin.cpp || cmake_object_order_depends_target_crowsite
+  DEFINES = -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -D_CROW_ICD-NOTFOUND
+  DEP_FILE = CMakeFiles/crowsite.dir/src/crowsite/requests/jellyfin.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap
+  OBJECT_DIR = CMakeFiles/crowsite.dir
+  OBJECT_FILE_DIR = CMakeFiles/crowsite.dir/src/crowsite/requests
+
 build CMakeFiles/crowsite.dir/src/crowsite/site/cache.cpp.o: CXX_COMPILER__crowsite_unscanned_Debug /home/brett/projects/cpp/crowsite/src/crowsite/site/cache.cpp || cmake_object_order_depends_target_crowsite
   DEFINES = -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -D_CROW_ICD-NOTFOUND
   DEP_FILE = CMakeFiles/crowsite.dir/src/crowsite/site/cache.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap
   OBJECT_DIR = CMakeFiles/crowsite.dir
   OBJECT_FILE_DIR = CMakeFiles/crowsite.dir/src/crowsite/site
 
@@ -61,7 +77,7 @@ build CMakeFiles/crowsite.dir/src/crowsite/site/web.cpp.o: CXX_COMPILER__crowsit
   DEFINES = -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -D_CROW_ICD-NOTFOUND
   DEP_FILE = CMakeFiles/crowsite.dir/src/crowsite/site/web.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap
   OBJECT_DIR = CMakeFiles/crowsite.dir
   OBJECT_FILE_DIR = CMakeFiles/crowsite.dir/src/crowsite/site
 
@@ -69,7 +85,7 @@ build CMakeFiles/crowsite.dir/src/crowsite/utility.cpp.o: CXX_COMPILER__crowsite
   DEFINES = -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -D_CROW_ICD-NOTFOUND
   DEP_FILE = CMakeFiles/crowsite.dir/src/crowsite/utility.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap
   OBJECT_DIR = CMakeFiles/crowsite.dir
   OBJECT_FILE_DIR = CMakeFiles/crowsite.dir/src/crowsite
 
@@ -77,7 +93,7 @@ build CMakeFiles/crowsite.dir/src/main.cpp.o: CXX_COMPILER__crowsite_unscanned_D
   DEFINES = -DBOOST_DATE_TIME_DYN_LINK -DBOOST_DATE_TIME_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB -D_CROW_ICD-NOTFOUND
   DEP_FILE = CMakeFiles/crowsite.dir/src/main.cpp.o.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/include -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap
   OBJECT_DIR = CMakeFiles/crowsite.dir
   OBJECT_FILE_DIR = CMakeFiles/crowsite.dir/src
 
@@ -89,10 +105,10 @@ build CMakeFiles/crowsite.dir/src/main.cpp.o: CXX_COMPILER__crowsite_unscanned_D
 #############################################
 # Link the executable crowsite
 
-build crowsite: CXX_EXECUTABLE_LINKER__crowsite_Debug CMakeFiles/crowsite.dir/src/crowsite/site/cache.cpp.o CMakeFiles/crowsite.dir/src/crowsite/site/web.cpp.o CMakeFiles/crowsite.dir/src/crowsite/utility.cpp.o CMakeFiles/crowsite.dir/src/main.cpp.o | libs/BLT/libBLT.a /usr/lib/libz.so /usr/lib/libboost_system.so.1.81.0 /usr/lib/libboost_date_time.so.1.81.0 || libs/BLT/libBLT.a
+build crowsite: CXX_EXECUTABLE_LINKER__crowsite_Debug CMakeFiles/crowsite.dir/src/crowsite/requests/curl.cpp.o CMakeFiles/crowsite.dir/src/crowsite/requests/jellyfin.cpp.o CMakeFiles/crowsite.dir/src/crowsite/site/cache.cpp.o CMakeFiles/crowsite.dir/src/crowsite/site/web.cpp.o CMakeFiles/crowsite.dir/src/crowsite/utility.cpp.o CMakeFiles/crowsite.dir/src/main.cpp.o | libs/BLT/libBLT.a /usr/lib/libcurl.so /usr/lib/libz.so /usr/lib/libboost_system.so.1.81.0 /usr/lib/libboost_date_time.so.1.81.0 || libs/BLT/libBLT.a
   FLAGS = -g
   LINK_FLAGS = -rdynamic
-  LINK_LIBRARIES = libs/BLT/libBLT.a  /usr/lib/libz.so  /usr/lib/libboost_system.so.1.81.0  /usr/lib/libboost_date_time.so.1.81.0
+  LINK_LIBRARIES = libs/BLT/libBLT.a  -lcurl  /usr/lib/libz.so  /usr/lib/libboost_system.so.1.81.0  /usr/lib/libboost_date_time.so.1.81.0
   OBJECT_DIR = CMakeFiles/crowsite.dir
   POST_BUILD = :
   PRE_LINK = :
@@ -139,66 +155,73 @@ build cmake_object_order_depends_target_BLT: phony || libs/BLT/CMakeFiles/BLT.di
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/filesystem.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/filesystem.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/filesystem.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/format.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/format.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/format.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/loader.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/loader.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/loader.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/logging.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/string.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/std/system.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/std
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling/profiler.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/profiling/profiler.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling/profiler.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/nbt/nbt.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt
 
 build libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/nbt/nbt_block.cpp || cmake_object_order_depends_target_BLT
   DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
-  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt
+
+build libs/BLT/CMakeFiles/BLT.dir/src/blt/parse/argparse.cpp.o: CXX_COMPILER__BLT_unscanned_Debug /home/brett/projects/cpp/crowsite/libs/BLT/src/blt/parse/argparse.cpp || cmake_object_order_depends_target_BLT
+  DEP_FILE = libs/BLT/CMakeFiles/BLT.dir/src/blt/parse/argparse.cpp.o.d
+  FLAGS = -g -std=gnu++20 -fdiagnostics-color=always -Wall -Wextra -Wpedantic
+  INCLUDES = -I/home/brett/projects/cpp/crowsite/libs/BLT/libraries/parallel-hashmap -I/home/brett/projects/cpp/crowsite/libs/BLT/include -I/home/brett/projects/cpp/crowsite/cmake-build-debug/libs/BLT/config
+  OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
+  OBJECT_FILE_DIR = libs/BLT/CMakeFiles/BLT.dir/src/blt/parse
 
 
 # =============================================================================
@@ -208,7 +231,7 @@ build libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o: CXX_COMPILER__BLT
 #############################################
 # Link the static library libs/BLT/libBLT.a
 
-build libs/BLT/libBLT.a: CXX_STATIC_LIBRARY_LINKER__BLT_Debug libs/BLT/CMakeFiles/BLT.dir/src/blt/std/filesystem.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/format.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/loader.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling/profiler.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o
+build libs/BLT/libBLT.a: CXX_STATIC_LIBRARY_LINKER__BLT_Debug libs/BLT/CMakeFiles/BLT.dir/src/blt/std/filesystem.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/format.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/loader.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/logging.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/string.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/std/system.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/profiling/profiler.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/nbt/nbt_block.cpp.o libs/BLT/CMakeFiles/BLT.dir/src/blt/parse/argparse.cpp.o
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = libs/BLT/CMakeFiles/BLT.dir
   POST_BUILD = :
@@ -276,14 +299,14 @@ build libs/BLT/all: phony libs/BLT/libBLT.a
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | /home/brett/projects/cpp/crowsite/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/include/blt/config.h.in /usr/lib/cmake/Boost-1.81.0/BoostConfig.cmake /usr/lib/cmake/Boost-1.81.0/BoostConfigVersion.cmake /usr/lib/cmake/BoostDetectToolset-1.81.0.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config-version.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-shared.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-static.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config-version.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config-version.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-shared.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-static.cmake /usr/local/lib/cmake/Crow/CrowConfig.cmake /usr/local/lib/cmake/Crow/CrowTargets.cmake /usr/share/cmake/Modules/CMakeCInformation.cmake /usr/share/cmake/Modules/CMakeCXXInformation.cmake /usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeLanguageInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/CheckCSourceCompiles.cmake /usr/share/cmake/Modules/CheckIncludeFile.cmake /usr/share/cmake/Modules/CheckLibraryExists.cmake /usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake/Modules/Compiler/GNU-C.cmake /usr/share/cmake/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake/Modules/Compiler/GNU.cmake /usr/share/cmake/Modules/FindBoost.cmake /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake/Modules/FindPackageMessage.cmake /usr/share/cmake/Modules/FindThreads.cmake /usr/share/cmake/Modules/FindZLIB.cmake /usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake /usr/share/cmake/Modules/SelectLibraryConfigurations.cmake CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | /home/brett/projects/cpp/crowsite/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/include/blt/config.h.in /usr/lib/cmake/Boost-1.81.0/BoostConfig.cmake /usr/lib/cmake/Boost-1.81.0/BoostConfigVersion.cmake /usr/lib/cmake/BoostDetectToolset-1.81.0.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config-version.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-shared.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-static.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config-version.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config-version.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-shared.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-static.cmake /usr/local/lib/cmake/Crow/CrowConfig.cmake /usr/local/lib/cmake/Crow/CrowTargets.cmake /usr/share/cmake/Modules/CMakeCInformation.cmake /usr/share/cmake/Modules/CMakeCXXInformation.cmake /usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeLanguageInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/CheckCSourceCompiles.cmake /usr/share/cmake/Modules/CheckIncludeFile.cmake /usr/share/cmake/Modules/CheckLibraryExists.cmake /usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake/Modules/Compiler/GNU-C.cmake /usr/share/cmake/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake/Modules/Compiler/GNU.cmake /usr/share/cmake/Modules/FindBoost.cmake /usr/share/cmake/Modules/FindCURL.cmake /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake/Modules/FindPackageMessage.cmake /usr/share/cmake/Modules/FindPkgConfig.cmake /usr/share/cmake/Modules/FindThreads.cmake /usr/share/cmake/Modules/FindZLIB.cmake /usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake /usr/share/cmake/Modules/SelectLibraryConfigurations.cmake CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build /home/brett/projects/cpp/crowsite/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/include/blt/config.h.in /usr/lib/cmake/Boost-1.81.0/BoostConfig.cmake /usr/lib/cmake/Boost-1.81.0/BoostConfigVersion.cmake /usr/lib/cmake/BoostDetectToolset-1.81.0.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config-version.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-shared.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-static.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config-version.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config-version.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-shared.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-static.cmake /usr/local/lib/cmake/Crow/CrowConfig.cmake /usr/local/lib/cmake/Crow/CrowTargets.cmake /usr/share/cmake/Modules/CMakeCInformation.cmake /usr/share/cmake/Modules/CMakeCXXInformation.cmake /usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeLanguageInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/CheckCSourceCompiles.cmake /usr/share/cmake/Modules/CheckIncludeFile.cmake /usr/share/cmake/Modules/CheckLibraryExists.cmake /usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake/Modules/Compiler/GNU-C.cmake /usr/share/cmake/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake/Modules/Compiler/GNU.cmake /usr/share/cmake/Modules/FindBoost.cmake /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake/Modules/FindPackageMessage.cmake /usr/share/cmake/Modules/FindThreads.cmake /usr/share/cmake/Modules/FindZLIB.cmake /usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake /usr/share/cmake/Modules/SelectLibraryConfigurations.cmake CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake: phony
+build /home/brett/projects/cpp/crowsite/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/CMakeLists.txt /home/brett/projects/cpp/crowsite/libs/BLT/include/blt/config.h.in /usr/lib/cmake/Boost-1.81.0/BoostConfig.cmake /usr/lib/cmake/Boost-1.81.0/BoostConfigVersion.cmake /usr/lib/cmake/BoostDetectToolset-1.81.0.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config-version.cmake /usr/lib/cmake/boost_date_time-1.81.0/boost_date_time-config.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-shared.cmake /usr/lib/cmake/boost_date_time-1.81.0/libboost_date_time-variant-static.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config-version.cmake /usr/lib/cmake/boost_headers-1.81.0/boost_headers-config.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config-version.cmake /usr/lib/cmake/boost_system-1.81.0/boost_system-config.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-shared.cmake /usr/lib/cmake/boost_system-1.81.0/libboost_system-variant-static.cmake /usr/local/lib/cmake/Crow/CrowConfig.cmake /usr/local/lib/cmake/Crow/CrowTargets.cmake /usr/share/cmake/Modules/CMakeCInformation.cmake /usr/share/cmake/Modules/CMakeCXXInformation.cmake /usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /usr/share/cmake/Modules/CMakeFindDependencyMacro.cmake /usr/share/cmake/Modules/CMakeGenericSystem.cmake /usr/share/cmake/Modules/CMakeInitializeConfigs.cmake /usr/share/cmake/Modules/CMakeLanguageInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /usr/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /usr/share/cmake/Modules/CheckCSourceCompiles.cmake /usr/share/cmake/Modules/CheckIncludeFile.cmake /usr/share/cmake/Modules/CheckLibraryExists.cmake /usr/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /usr/share/cmake/Modules/Compiler/GNU-C.cmake /usr/share/cmake/Modules/Compiler/GNU-CXX.cmake /usr/share/cmake/Modules/Compiler/GNU.cmake /usr/share/cmake/Modules/FindBoost.cmake /usr/share/cmake/Modules/FindCURL.cmake /usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /usr/share/cmake/Modules/FindPackageMessage.cmake /usr/share/cmake/Modules/FindPkgConfig.cmake /usr/share/cmake/Modules/FindThreads.cmake /usr/share/cmake/Modules/FindZLIB.cmake /usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-C.cmake /usr/share/cmake/Modules/Platform/Linux-GNU-CXX.cmake /usr/share/cmake/Modules/Platform/Linux-GNU.cmake /usr/share/cmake/Modules/Platform/Linux-Initialize.cmake /usr/share/cmake/Modules/Platform/Linux.cmake /usr/share/cmake/Modules/Platform/UnixPaths.cmake /usr/share/cmake/Modules/SelectLibraryConfigurations.cmake CMakeCache.txt CMakeFiles/3.27.0/CMakeCCompiler.cmake CMakeFiles/3.27.0/CMakeCXXCompiler.cmake CMakeFiles/3.27.0/CMakeSystem.cmake: phony
 
 
 #############################################

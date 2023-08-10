@@ -14,7 +14,7 @@ namespace cs {
     namespace parser {
         class Post {
             private:
-                hashmap<std::string, std::string> m_Values;
+                HASHMAP<std::string, std::string> m_Values;
             public:
                 explicit Post(const std::string& input);
                 

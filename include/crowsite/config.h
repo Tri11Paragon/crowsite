@@ -6,9 +6,7 @@
 #define CROWSITE_CONFIG_H
 
 #include <unordered_map>
-
-template<typename K, typename V, typename HASH=std::hash<K>>
-using hashmap = std::unordered_map<K, V, HASH>;
+#include <blt/std/hashmap.h>
 
 #define CROW_STATIC_DIRECTORY "/mnt/games/Projects/cpp/crowsite/crow_test/static/"
 #define SITE_FILES_PATH "/mnt/games/Projects/cpp/crowsite/crow_test"

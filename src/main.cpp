@@ -7,10 +7,18 @@
 #include <crowsite/utility.h>
 #include <crowsite/site/cache.h>
 #include <crowsite/beemovie.h>
+#include <crowsite/requests/curl.h>
+#include <blt/parse/argparse.h>
 
-int main() {
+int main(int argc, const char** argv) {
     blt::logging::setLogOutputFormat("\033[94m[${{FULL_TIME}}]${{RC}} ${{LF}}[${{LOG_LEVEL}}]${{RC}} \033[35m(${{FILE}}:${{LINE}})${{RC}} ${{CNR}}${{STR}}${{RC}}\n");
-//    blt::string::StringBuffer buffer;
+    cs::requests::init();
+    
+    blt::arg_parse parser;
+    parser.addArgument(blt::arg_builder("token").build());
+    auto args = parser.parse_args(argc, argv);
+    
+    //    blt::string::StringBuffer buffer;
 //    std::stringstream stream;
 //    std::string normalString;
 //    std::string normalStringReserved;
@@ -62,6 +70,10 @@ int main() {
 //
 //    return 0;
     
+    cs::requests::easy_get get;
+    get.setAuthHeader("MediaBrowser Client=Crowsite, Device=YourMom, Token=" + blt::arg_parse::get<std::string>(args["token"]));
+    get.request("https://media.tpgc.me/Auth/Keys");
+
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
     
@@ -127,6 +139,8 @@ int main() {
     );
     
     app.port(8080).multithreaded().run();
+    
+    cs::requests::cleanup();
     
     return 0;
 }

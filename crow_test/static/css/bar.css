@@ -1,0 +1,9 @@
+button.bar {
+    border-radius: 4px;
+    padding: 12px 28px;
+    font-size: 16px;
+    background-color: #9a7aa0;
+}
+button.bar:hover {
+    box-shadow: 0 12px 16px 0 rgba(59, 165, 144,0.24), 0 17px 50px 0 rgba(59, 165, 144,0.19);
+}

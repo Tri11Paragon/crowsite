@@ -13,7 +13,7 @@ namespace cs {
     
     class StaticContext {
         private:
-            hashmap<std::string, std::string> replacements;
+            HASHMAP<std::string, std::string> replacements;
         public:
             inline auto begin() {
                 return replacements.begin();
