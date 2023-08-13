@@ -5,7 +5,7 @@
 #include <blt/std/logging.h>
 #include <blt/std/hashmap.h>
 
-namespace cs::requests {
+namespace cs {
     
     HASHMAP<std::string, std::string> responses;
     

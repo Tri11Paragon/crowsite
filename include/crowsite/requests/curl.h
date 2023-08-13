@@ -8,20 +8,21 @@
 #include <string>
 #include <curl/curl.h>
 
-namespace cs::requests {
+namespace cs {
 
     void init();
     void cleanup();
     
-    class easy_get {
+    class request {
         private:
             CURL* handler = nullptr;
             struct curl_slist* headers = nullptr;
         public:
-            easy_get();
+            request();
             void setAuthHeader(const std::string& header);
-            void request(const std::string& domain);
-            ~easy_get();
+            void get(const std::string& domain);
+            void post(const std::string& domain);
+            ~easyrequest_get();
     };
 
 }
