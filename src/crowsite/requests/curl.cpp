@@ -17,8 +17,9 @@ namespace cs
         auto* name = (const char*) userdata;
         std::string site{name};
         
-        blt::scoped_buffer<char> response{size * nmemb};
+        blt::scoped_buffer<char> response{size * nmemb + 1};
         memcpy(response.ptr(), ptr, size * nmemb);
+        response[size * nmemb] = '\0';
         
         if (responses.find(site) != responses.end()){
             std::string res{response.ptr()};
@@ -66,7 +67,6 @@ namespace cs
     
     void request::get(const std::string& domain, const std::string& data)
     {
-        BLT_WARN("Domain: %s", domain.c_str());
         auto full = domain + data;
         curl_easy_setopt(handler, CURLOPT_URL, full.c_str());
         curl_easy_setopt(handler, CURLOPT_WRITEDATA, domain.c_str());

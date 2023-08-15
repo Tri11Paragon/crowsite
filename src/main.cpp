@@ -7,6 +7,7 @@
 #include <crowsite/utility.h>
 #include <crowsite/site/cache.h>
 #include <crowsite/beemovie.h>
+#include <crowsite/requests/jellyfin.h>
 #include <crowsite/requests/curl.h>
 #include <blt/parse/argparse.h>
 
@@ -48,6 +49,8 @@ int main(int argc, const char** argv)
     blt::arg_parse parser;
     parser.addArgument(blt::arg_builder("token").build());
     auto args = parser.parse_args(argc, argv);
+    cs::jellyfin::setToken(blt::arg_parse::get<std::string>(args["token"]));
+    cs::jellyfin::processUserData();
     
     //    blt::string::StringBuffer buffer;
 //    std::stringstream stream;
@@ -101,12 +104,7 @@ int main(int argc, const char** argv)
 //
 //    return 0;
     
-    cs::request get;
-    get.setAuthHeader("MediaBrowser Client=Crowsite, Device=YourMom, Token=" + blt::arg_parse::get<std::string>(args["token"]));
-    get.get("https://media.tpgc.me/Users");
     
-    const auto& f = cs::request::getResponse("https://media.tpgc.me/Users");
-    BLT_TRACE(f);
     
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
