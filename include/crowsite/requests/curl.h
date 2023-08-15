@@ -8,23 +8,33 @@
 #include <string>
 #include <curl/curl.h>
 
-namespace cs {
-
-    void init();
-    void cleanup();
+namespace cs
+{
     
-    class request {
+    namespace requests
+    {
+        void init();
+        
+        void cleanup();
+    }
+    
+    class request
+    {
         private:
             CURL* handler = nullptr;
             struct curl_slist* headers = nullptr;
         public:
             request();
+            
             void setAuthHeader(const std::string& header);
+            
             void get(const std::string& domain);
+            
             void post(const std::string& domain);
-            ~easyrequest_get();
+            
+            ~request();
     };
-
+    
 }
 
 #endif //CROWSITE_CURL_H

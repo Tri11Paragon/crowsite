@@ -10,8 +10,39 @@
 #include <crowsite/requests/curl.h>
 #include <blt/parse/argparse.h>
 
-int main(int argc, const char** argv) {
-    blt::logging::setLogOutputFormat("\033[94m[${{FULL_TIME}}]${{RC}} ${{LF}}[${{LOG_LEVEL}}]${{RC}} \033[35m(${{FILE}}:${{LINE}})${{RC}} ${{CNR}}${{STR}}${{RC}}\n");
+class BLT_CrowLogger : public crow::ILogHandler
+{
+    public:
+        void log(std::string message, crow::LogLevel crow_level) final
+        {
+            blt::logging::log_level blt_level;
+            switch (crow_level){
+                case crow::LogLevel::DEBUG:
+                    blt_level = blt::logging::log_level::DEBUG;
+                    break;
+                case crow::LogLevel::INFO:
+                    blt_level = blt::logging::log_level::INFO;
+                    break;
+                case crow::LogLevel::WARNING:
+                    blt_level = blt::logging::log_level::WARN;
+                    break;
+                case crow::LogLevel::ERROR:
+                    blt_level = blt::logging::log_level::ERROR;
+                    break;
+                case crow::LogLevel::CRITICAL:
+                    blt_level = blt::logging::log_level::FATAL;
+                    break;
+            }
+            BLT_LOG("Crow: %s", blt_level, message.c_str());
+        }
+};
+
+
+int main(int argc, const char** argv)
+{
+    blt::logging::setLogOutputFormat(
+            "\033[94m[${{FULL_TIME}}]${{RC}} ${{LF}}[${{LOG_LEVEL}}]${{RC}} \033[35m(${{FILE}}:${{LINE}})${{RC}} ${{CNR}}${{STR}}${{RC}}\n"
+    );
     cs::requests::init();
     
     blt::arg_parse parser;
@@ -70,12 +101,14 @@ int main(int argc, const char** argv) {
 //
 //    return 0;
     
-    cs::requests::easy_get get;
+    cs::request get;
     get.setAuthHeader("MediaBrowser Client=Crowsite, Device=YourMom, Token=" + blt::arg_parse::get<std::string>(args["token"]));
-    get.request("https://media.tpgc.me/Auth/Keys");
-
+    get.get("https://media.tpgc.me/Auth/Keys");
+    
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
+    static BLT_CrowLogger bltCrowLogger{};
+    crow::logger::setHandler(&bltCrowLogger);
     
     BLT_INFO("Init Crow with compression and logging enabled!");
     crow::SimpleApp app;
@@ -97,12 +130,14 @@ int main(int argc, const char** argv) {
     
     BLT_INFO("Creating routes");
     
-    CROW_ROUTE(app, "/favicon.ico")([](crow::response& local_fav_res) {
-        local_fav_res.compressed = false;
-        local_fav_res.set_static_file_info_unsafe(cs::fs::createStaticFilePath("images/favicon.ico"));
-        local_fav_res.set_header("content-type", "image/x-icon");
-        local_fav_res.end();
-    });
+    CROW_ROUTE(app, "/favicon.ico")(
+            [](crow::response& local_fav_res) {
+                local_fav_res.compressed = false;
+                local_fav_res.set_static_file_info_unsafe(cs::fs::createStaticFilePath("images/favicon.ico"));
+                local_fav_res.set_header("content-type", "image/x-icon");
+                local_fav_res.end();
+            }
+    );
     
     CROW_ROUTE(app, "/<string>")(
             [&](const std::string& name) -> crow::response {
@@ -128,9 +163,11 @@ int main(int argc, const char** argv) {
             }
     );
     
-    CROW_ROUTE(app, "/")([&engine]() {
-        return engine.fetch("home.html");
-    });
+    CROW_ROUTE(app, "/")(
+            [&engine]() {
+                return engine.fetch("home.html");
+            }
+    );
     
     CROW_CATCHALL_ROUTE(app)(
             [&engine]() {

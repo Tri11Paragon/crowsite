@@ -21,7 +21,7 @@ namespace cs {
         responses[site] = response;
     }
     
-    void init()
+    void requests::init()
     {
         auto code = curl_global_init(CURL_GLOBAL_ALL);
         if (code)
@@ -31,23 +31,23 @@ namespace cs {
         }
     }
     
-    void cleanup()
+    void requests::cleanup()
     {
         curl_global_cleanup();
     }
     
-    easy_get::easy_get()
+    request::request()
     {
         handler = curl_easy_init();
     }
     
-    easy_get::~easy_get()
+    request::~request()
     {
         curl_slist_free_all(headers);
         curl_easy_cleanup(handler);
     }
     
-    void easy_get::setAuthHeader(const std::string& header)
+    void request::setAuthHeader(const std::string& header)
     {
         curl_slist_free_all(headers);
         headers = curl_slist_append(headers, "Content-Type: application/json");
@@ -56,7 +56,7 @@ namespace cs {
         curl_easy_setopt(handler, CURLOPT_HTTPHEADER, headers);
     }
     
-    void easy_get::request(const std::string& domain)
+    void request::get(const std::string& domain)
     {
         curl_easy_setopt(handler, CURLOPT_URL, domain.c_str());
         curl_easy_setopt(handler, CURLOPT_WRITEDATA, domain.c_str());
@@ -67,5 +67,10 @@ namespace cs {
         if (err){
             BLT_ERROR("CURL failed to send request '%s'. Error '%s'", domain.c_str(), curl_easy_strerror(err));
         }
+    }
+    
+    void request::post(const std::string& domain)
+    {
+    
     }
 }
