@@ -26,11 +26,13 @@ namespace cs
         public:
             request();
             
+            static const std::string& getResponse(const std::string& domain);
+            
             void setAuthHeader(const std::string& header);
             
-            void get(const std::string& domain);
+            void get(const std::string& domain, const std::string& data = "");
             
-            void post(const std::string& domain);
+            void post(const std::string& domain, const std::string& data = "");
             
             ~request();
     };

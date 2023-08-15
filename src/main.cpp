@@ -103,7 +103,10 @@ int main(int argc, const char** argv)
     
     cs::request get;
     get.setAuthHeader("MediaBrowser Client=Crowsite, Device=YourMom, Token=" + blt::arg_parse::get<std::string>(args["token"]));
-    get.get("https://media.tpgc.me/Auth/Keys");
+    get.get("https://media.tpgc.me/Users");
+    
+    const auto& f = cs::request::getResponse("https://media.tpgc.me/Users");
+    BLT_TRACE(f);
     
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);

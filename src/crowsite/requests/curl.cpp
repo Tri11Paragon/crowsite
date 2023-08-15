@@ -4,21 +4,29 @@
 #include <crowsite/requests/curl.h>
 #include <blt/std/logging.h>
 #include <blt/std/hashmap.h>
+#include <blt/std/memory.h>
+#include <cstring>
 
-namespace cs {
+namespace cs
+{
     
     HASHMAP<std::string, std::string> responses;
     
-    void writeData(char *ptr, size_t size, size_t nmemb, void *userdata){
-        BLT_INFO("Data %p, %u %u", ptr, size, nmemb);
-        const char* name = (const char*) userdata;
+    size_t writeData(char* ptr, size_t size, size_t nmemb, void* userdata)
+    {
+        auto* name = (const char*) userdata;
         std::string site{name};
-        std::string response;
-        response.reserve(nmemb);
-        for (size_t i = 0; i < nmemb; i++)
-            response += ptr[i];
-        BLT_TRACE("%s", response.c_str());
-        responses[site] = response;
+        
+        blt::scoped_buffer<char> response{size * nmemb};
+        memcpy(response.ptr(), ptr, size * nmemb);
+        
+        if (responses.find(site) != responses.end()){
+            std::string res{response.ptr()};
+            responses[site].append(res);
+        } else
+            responses[site] = std::string(response.ptr());
+        
+        return size * nmemb;
     }
     
     void requests::init()
@@ -56,21 +64,37 @@ namespace cs {
         curl_easy_setopt(handler, CURLOPT_HTTPHEADER, headers);
     }
     
-    void request::get(const std::string& domain)
+    void request::get(const std::string& domain, const std::string& data)
     {
+        BLT_WARN("Domain: %s", domain.c_str());
+        auto full = domain + data;
+        curl_easy_setopt(handler, CURLOPT_URL, full.c_str());
+        curl_easy_setopt(handler, CURLOPT_WRITEDATA, domain.c_str());
+        curl_easy_setopt(handler, CURLOPT_WRITEFUNCTION, writeData);
+        
+        auto err = curl_easy_perform(handler);
+        if (err != CURLE_OK)
+        {
+            BLT_ERROR("CURL failed to send GET request '%s'. Error '%s'", domain.c_str(), curl_easy_strerror(err));
+        }
+    }
+    
+    void request::post(const std::string& domain, const std::string& data)
+    {
+        curl_easy_setopt(handler, CURLOPT_POSTFIELDS, data.c_str());
         curl_easy_setopt(handler, CURLOPT_URL, domain.c_str());
         curl_easy_setopt(handler, CURLOPT_WRITEDATA, domain.c_str());
         curl_easy_setopt(handler, CURLOPT_WRITEFUNCTION, writeData);
         
-        // TODO Error decode
         auto err = curl_easy_perform(handler);
-        if (err){
-            BLT_ERROR("CURL failed to send request '%s'. Error '%s'", domain.c_str(), curl_easy_strerror(err));
+        if (err != CURLE_OK)
+        {
+            BLT_ERROR("CURL failed to send POST request '%s'. Error '%s'", domain.c_str(), curl_easy_strerror(err));
         }
     }
     
-    void request::post(const std::string& domain)
+    const std::string& request::getResponse(const std::string& domain)
     {
-    
+        return responses[domain];
     }
 }
