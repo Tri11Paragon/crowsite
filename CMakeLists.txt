@@ -10,6 +10,9 @@ set(CROW_FEATURES compression)
 
 find_package(Crow)
 find_package(CURL)
+find_package(OpenSSL)
+
+message("SSL ${OPENSSL_INCLUDE_DIR}")
 
 if (NOT CURL_FOUND)
     message("libcurl is required!")
@@ -28,6 +31,7 @@ add_executable(crowsite ${source_files})
 target_link_libraries(crowsite BLT)
 target_link_libraries(crowsite Crow::Crow)
 target_link_libraries(crowsite ${CURL_LIBRARIES})
+target_link_libraries(crowsite OpenSSL::SSL OpenSSL::Crypto)
 target_compile_options(crowsite PRIVATE -Wall -Wextra -Wpedantic)
 
 if (${ENABLE_ADDRSAN} MATCHES ON)

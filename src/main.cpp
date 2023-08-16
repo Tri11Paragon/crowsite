@@ -48,9 +48,13 @@ int main(int argc, const char** argv)
     
     blt::arg_parse parser;
     parser.addArgument(blt::arg_builder("token").build());
+    parser.addArgument(blt::arg_builder("user").build());
+    parser.addArgument(blt::arg_builder("pass").build());
     auto args = parser.parse_args(argc, argv);
     cs::jellyfin::setToken(blt::arg_parse::get<std::string>(args["token"]));
     cs::jellyfin::processUserData();
+    
+    cs::jellyfin::authenticateUser(blt::arg_parse::get<std::string>(args["user"]), blt::arg_parse::get<std::string>(args["pass"]));
     
     //    blt::string::StringBuffer buffer;
 //    std::stringstream stream;

@@ -27,12 +27,19 @@ namespace cs
             request();
             
             static const std::string& getResponse(const std::string& domain);
+            static std::string getResponseAndClear(const std::string& domain);
+            static void clearResponse(const std::string& domain);
             
+            void setContentHeaderJson();
+            void setContentHeaderXForm();
+            void setContentHeader(const std::string& header);
             void setAuthHeader(const std::string& header);
             
             void get(const std::string& domain, const std::string& data = "");
             
             void post(const std::string& domain, const std::string& data = "");
+            
+            long status();
             
             ~request();
     };
