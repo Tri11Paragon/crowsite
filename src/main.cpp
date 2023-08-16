@@ -56,60 +56,6 @@ int main(int argc, const char** argv)
     
     cs::jellyfin::authenticateUser(blt::arg_parse::get<std::string>(args["user"]), blt::arg_parse::get<std::string>(args["pass"]));
     
-    //    blt::string::StringBuffer buffer;
-//    std::stringstream stream;
-//    std::string normalString;
-//    std::string normalStringReserved;
-//
-//    const int bufferSize = 12030;
-//    const int runCount = 1024;
-//    const char chars[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-//
-//    for (int _ = 0; _ < runCount; _++) {
-//        BLT_START_INTERVAL("Writing", "StringBuffer");
-//        for (int i = 0; i < bufferSize; i++)
-//            buffer << chars[i % 26];
-//        BLT_END_INTERVAL("Writing", "StringBuffer");
-//
-//        BLT_START_INTERVAL("Trim", "StringBuffer");
-//        auto bs = buffer.str();
-//        BLT_END_INTERVAL("Trim", "StringBuffer");
-//
-//        BLT_START_INTERVAL("Writing", "NormalString");
-//        for (int i = 0; i < bufferSize; i++)
-//            normalString += chars[i % 26];
-//        BLT_END_INTERVAL("Writing", "NormalString");
-//
-//        BLT_START_INTERVAL("Writing", "NormalStringReserved");
-//        for (int i = 0; i < bufferSize; i++)
-//            normalStringReserved += chars[i % 26];
-//        BLT_END_INTERVAL("Writing", "NormalStringReserved");
-//
-//        BLT_START_INTERVAL("Writing", "StringStream");
-//        for (int i = 0; i < bufferSize; i++)
-//            stream << chars[i % 26];
-//        BLT_END_INTERVAL("Writing", "StringStream");
-//
-//        BLT_START_INTERVAL("Trim", "StringStream");
-//        auto ss = stream.str();
-//        BLT_END_INTERVAL("Trim", "StringStream");
-//
-//        for (size_t i = 0; i < bs.size(); i++){
-//            if (bs[i] != ss[i]){
-//                BLT_ERROR("String length %d vs %d", bs.size(), ss.size());
-//                BLT_ERROR("String has an error at pos %d. expected %c got %c", i, ss[i], bs[i]);
-//                return 1;
-//            }
-//        }
-//    }
-//
-//    BLT_PRINT_PROFILE("Writing", blt::logging::BLT_NONE, true);
-//    BLT_PRINT_PROFILE("Trim", blt::logging::BLT_NONE, true);
-//
-//    return 0;
-    
-    
-    
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
     static BLT_CrowLogger bltCrowLogger{};
@@ -145,9 +91,17 @@ int main(int argc, const char** argv)
     );
     
     CROW_ROUTE(app, "/<string>")(
-            [&](const std::string& name) -> crow::response {
+            [&](const crow::request& req, const std::string& name) -> crow::response {
                 //auto page = crow::mustache::load("index.html"); //
                 //return "<html><head><title>Hello There</title></head><body><h1>Suck it " + name + "</h1></body></html>";
+//                BLT_TRACE(req.body);
+//                for (const auto& h : req.headers)
+//                    BLT_TRACE("Header: %s = %s", h.first.c_str(), h.second.c_str());
+//                BLT_TRACE(req.raw_url);
+//                BLT_TRACE(req.url);
+//                BLT_TRACE(req.remote_ip_address);
+//                for (const auto& v : req.url_params.keys())
+//                    BLT_TRACE("URL: %s = %s", v.c_str(), req.url_params.get(v));
                 if (name.ends_with(".html"))
                     return {engine.fetch(name)};
                 
@@ -160,7 +114,7 @@ int main(int argc, const char** argv)
             }
     );
     
-    CROW_ROUTE(app, "/req/posta.html").methods(crow::HTTPMethod::POST)(
+    CROW_ROUTE(app, "/res/login").methods(crow::HTTPMethod::POST)(
             [](const crow::request& req) {
                 cs::parser::Post pp(req.body);
                 

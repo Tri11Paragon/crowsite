@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/bar.css">
+    <title>{{$SITE_TITLE}}</title>
+  </head>
+  <body>
+    <div class="center">
+        <div class="body">
+            <div class="titlebar">
+              <button class="bar"><a href="/home.html">home</a></button>
+              <button class="bar"><a href="/projects.html">projects</a></button>
+            </div>
+            <div class="center">
+                <form action="/res/login" method="post">
+                    <label for="username">Username</label><br>
+                    <input type="text" id="username" name="username"><br>
+                    <label for="password">Password</label><br>
+                    <input type="password" id="password" name="password">
+                    <input type="submit" value="Login">
+                </form>
+            </div>
+        </div>
+    </div>
+  </body>
+</html>
