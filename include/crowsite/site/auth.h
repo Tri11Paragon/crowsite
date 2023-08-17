@@ -9,7 +9,7 @@
 
 namespace cs {
 
-    void handleLoginPost(cs::parser::Post postData);
+    bool handleLoginPost(cs::parser::Post& postData);
 
 }
 

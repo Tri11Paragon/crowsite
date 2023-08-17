@@ -57,7 +57,8 @@ int main(int argc, const char** argv)
     cs::jellyfin::setToken(blt::arg_parse::get<std::string>(args["token"]));
     cs::jellyfin::processUserData();
     
-    cs::jellyfin::authenticateUser(blt::arg_parse::get<std::string>(args["user"]), blt::arg_parse::get<std::string>(args["pass"]));
+    auto res = cs::jellyfin::authenticateUser(blt::arg_parse::get<std::string>(args["user"]), blt::arg_parse::get<std::string>(args["pass"]));
+    BLT_INFO("Has true: %b", res == cs::jellyfin::auth_response::AUTHORIZED);
     
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
@@ -76,6 +77,7 @@ int main(int argc, const char** argv)
     context["SITE_NAME"] = SITE_NAME;
     context["SITE_VERSION"] = SITE_VERSION;
     context["BEE_MOVIE"] = beemovie_script;
+    context["SITE_BACKGROUND"] = "/static/images/backgrounds/2023-05-26_23.18.23.png";
     
     BLT_INFO("Starting cache engine");
     
@@ -128,7 +130,13 @@ int main(int argc, const char** argv)
                 cs::parser::Post pp(req.body);
                 
                 crow::response res(303);
-                res.set_header("Location", pp.hasKey("referer") ? pp["referer"] : "/");
+                
+                // either redirect to clear the form if failed or pass user to index
+                if (cs::handleLoginPost(pp))
+                    res.set_header("Location", pp.hasKey("referer") ? pp["referer"] : "/");
+                else
+                    res.set_header("Location", "/login.html");
+                    
                 return res;
             }
     );

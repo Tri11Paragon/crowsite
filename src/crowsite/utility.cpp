@@ -3,6 +3,7 @@
 //
 #include <crowsite/utility.h>
 #include <blt/std/string.h>
+#include <curl/curl.h>
 
 namespace cs {
     
@@ -10,10 +11,12 @@ namespace cs {
         Post::Post(const std::string& input) {
             auto pairs = blt::string::split(input, "&");
             for (const auto& pair : pairs) {
-                //BLT_TRACE("Pair: %s", pair.c_str());
                 auto kv = blt::string::split(pair, "=");
-                //zBLT_TRACE("[%s] = %s", kv[0].c_str(), kv[1].c_str());
-                m_Values[kv[0]] = kv[1];
+                auto key = kv[0];
+                auto value = kv[1];
+                auto stripped_key = curl_easy_unescape(nullptr, key.c_str(), 0, nullptr);
+                auto stripped_value = curl_easy_unescape(nullptr, value.c_str(), 0, nullptr);
+                m_Values[stripped_key] = stripped_value;
             }
         }
         
