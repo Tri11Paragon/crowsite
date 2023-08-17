@@ -17,6 +17,8 @@ namespace cs {
                 auto stripped_key = curl_easy_unescape(nullptr, key.c_str(), 0, nullptr);
                 auto stripped_value = curl_easy_unescape(nullptr, value.c_str(), 0, nullptr);
                 m_Values[stripped_key] = stripped_value;
+                curl_free(stripped_key);
+                curl_free(stripped_value);
             }
         }
         

@@ -6,10 +6,16 @@
 #define CROWSITE_AUTH_H
 
 #include "crowsite/utility.h"
+#include <string>
 
 namespace cs {
+    
+    struct cookie_data {
+        std::string clientID;
+        std::string clientToken;
+    };
 
-    bool handleLoginPost(cs::parser::Post& postData);
+    bool handleLoginPost(cs::parser::Post& postData, cookie_data& cookieOut);
 
 }
 
