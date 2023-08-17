@@ -30,8 +30,8 @@ namespace cs::jellyfin
         
         for (const auto& user : json)
         {
-            auto username = user["Name"].s();
-            auto userid = user["Id"].s();
+            auto username = std::string(user["Name"].s());
+            auto userid = std::string(user["Id"].s());
             //BLT_TRACE("Processing %s = %s", username.operator std::string().c_str(), userid.operator std::string().c_str());
             GLOBALS.user_ids[username] = userid;
         }

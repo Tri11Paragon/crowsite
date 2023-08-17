@@ -10,6 +10,7 @@
 #include <crowsite/requests/jellyfin.h>
 #include <crowsite/requests/curl.h>
 #include <blt/parse/argparse.h>
+#include <crowsite/site/auth.h>
 
 class BLT_CrowLogger : public crow::ILogHandler
 {
@@ -17,7 +18,8 @@ class BLT_CrowLogger : public crow::ILogHandler
         void log(std::string message, crow::LogLevel crow_level) final
         {
             blt::logging::log_level blt_level;
-            switch (crow_level){
+            switch (crow_level)
+            {
                 case crow::LogLevel::DEBUG:
                     blt_level = blt::logging::log_level::DEBUG;
                     break;
@@ -47,6 +49,7 @@ int main(int argc, const char** argv)
     cs::requests::init();
     
     blt::arg_parse parser;
+    parser.addArgument(blt::arg_builder("--tests").setAction(blt::arg_action_t::STORE_TRUE).build());
     parser.addArgument(blt::arg_builder("token").build());
     parser.addArgument(blt::arg_builder("user").build());
     parser.addArgument(blt::arg_builder("pass").build());
@@ -64,7 +67,7 @@ int main(int argc, const char** argv)
     BLT_INFO("Init Crow with compression and logging enabled!");
     crow::SimpleApp app;
     app.use_compression(crow::compression::GZIP);
-    app.loglevel(crow::LogLevel::INFO);
+    app.loglevel(crow::LogLevel::WARNING);
     
     BLT_INFO("Creating static context");
     
@@ -103,12 +106,18 @@ int main(int argc, const char** argv)
 //                for (const auto& v : req.url_params.keys())
 //                    BLT_TRACE("URL: %s = %s", v.c_str(), req.url_params.get(v));
                 if (name.ends_with(".html"))
-                    return {engine.fetch(name)};
+                {
+                    crow::mustache::context ctx;
+                    // we don't want to pass all get parameters to the context to prevent leaking
+                    auto referer = req.url_params.get("referer");
+                    if (referer)
+                        ctx["referer"] = referer;
+                    auto page = crow::mustache::compile(engine.fetch(name));
+                    return page.render(ctx);
+                }
                 
                 crow::mustache::context ctx({{"person", name}});
                 auto user_page = crow::mustache::compile(engine.fetch("index.html"));
-                
-                //BLT_TRACE(page);
                 
                 return user_page.render(ctx);
             }
@@ -118,13 +127,15 @@ int main(int argc, const char** argv)
             [](const crow::request& req) {
                 cs::parser::Post pp(req.body);
                 
-                return "Portabella Mushrooms! " + pp.dump();
+                crow::response res(303);
+                res.set_header("Location", pp.hasKey("referer") ? pp["referer"] : "/");
+                return res;
             }
     );
     
     CROW_ROUTE(app, "/")(
             [&engine]() {
-                return engine.fetch("home.html");
+                return engine.fetch("index.html");
             }
     );
     
@@ -134,6 +145,19 @@ int main(int argc, const char** argv)
             }
     );
     
+    app.tick(
+            std::chrono::seconds(1), [&app, &args]() -> void {
+                if (!args.contains("tests"))
+                    return;
+                static uint64_t timer = 0;
+                const uint64_t wait = 10;
+                timer++;
+                if (timer > wait)
+                {
+                    app.stop();
+                }
+            }
+    );
     app.port(8080).multithreaded().run();
     
     cs::requests::cleanup();

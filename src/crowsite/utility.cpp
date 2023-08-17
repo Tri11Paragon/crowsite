@@ -32,6 +32,11 @@ namespace cs {
             }
             return out;
         }
+        
+        bool Post::hasKey(const std::string& key)
+        {
+            return m_Values.find(key) != m_Values.end();
+        }
     }
     
     namespace fs {

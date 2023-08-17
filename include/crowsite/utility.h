@@ -8,6 +8,7 @@
 #include <string>
 #include <crowsite/config.h>
 #include <filesystem>
+#include <blt/std/hashmap.h>
 
 namespace cs {
     
@@ -18,6 +19,7 @@ namespace cs {
             public:
                 explicit Post(const std::string& input);
                 
+                bool hasKey(const std::string& key);
                 const std::string& operator[](const std::string& key);
                 
                 std::string dump();

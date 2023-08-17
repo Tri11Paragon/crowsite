@@ -8,6 +8,7 @@ option(ENABLE_TSAN "Enable the thread data race sanitizer" OFF)
 set(CMAKE_CXX_STANDARD 20)
 set(CROW_FEATURES compression)
 
+cmake_policy(SET CMP0057 NEW)
 find_package(Crow)
 find_package(CURL)
 find_package(OpenSSL)

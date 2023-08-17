@@ -5,9 +5,11 @@
 #ifndef CROWSITE_AUTH_H
 #define CROWSITE_AUTH_H
 
+#include "crowsite/utility.h"
+
 namespace cs {
 
-
+    void handleLoginPost(cs::parser::Post postData);
 
 }
 
