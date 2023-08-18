@@ -21,7 +21,6 @@ namespace cs::jellyfin
             std::string name;
             std::string serverId;
             std::string Id;
-            std::string primaryImageTag;
             bool hasPassword;
             bool hasConfiguredPassword;
             bool hasConfiguredEasyPassword;
@@ -29,12 +28,13 @@ namespace cs::jellyfin
             std::string lastLoginDate;
             std::string lastActivityDate;
         } user;
-        std::string accessToken;
+        bool isAdmin{};
     };
     
     void setToken(std::string_view token);
     
     void processUserData();
+    const client_data& getUserData(const std::string& username);
     
     std::string generateAuthHeader();
     std::string getUserData();

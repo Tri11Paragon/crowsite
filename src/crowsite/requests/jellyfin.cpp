@@ -13,8 +13,7 @@ namespace cs::jellyfin
     struct
     {
         std::string token;
-        HASHMAP<std::string, std::string> user_ids;
-        HASHMAP<std::string, client_data> logged_in_users;
+        HASHMAP<std::string, client_data> user_ids;
     } GLOBALS;
     
     void setToken(std::string_view token)
@@ -24,16 +23,29 @@ namespace cs::jellyfin
     
     void processUserData()
     {
-        auto data = getUserData();
+        auto usr_data = getUserData();
         
-        auto json = crow::json::load(data);
+        auto json = crow::json::load(usr_data);
         
-        for (const auto& user : json)
+        for (const auto& users : json)
         {
-            auto username = std::string(user["Name"].s());
-            auto userid = std::string(user["Id"].s());
+            const auto& policy = users["Policy"];
+            
+            client_data data;
+            data.isAdmin = policy["IsAdministrator"].b();
+            auto& user = data.user;
+            user.name = users["Name"].s();
+            user.serverId = users["ServerId"].s();
+            user.Id = users["Id"].s();
+            user.hasPassword = users["HasPassword"].b();
+            user.hasConfiguredPassword = users["HasConfiguredPassword"].b();
+            user.hasConfiguredEasyPassword = users["HasConfiguredEasyPassword"].b();
+            user.enableAutoLogin = users["EnableAutoLogin"].b();
+            user.lastLoginDate = users["LastLoginDate"].s();
+            user.lastActivityDate = users["LastActivityDate"].s();
+            
             //BLT_TRACE("Processing %s = %s", username.operator std::string().c_str(), userid.operator std::string().c_str());
-            GLOBALS.user_ids[username] = userid;
+            GLOBALS.user_ids[user.name] = data;
         }
     }
     
@@ -81,31 +93,14 @@ namespace cs::jellyfin
         auto response = cs::request::getResponseAndClear(l_url);
         
         if (post.status() == 200)
-        {
-            crow::json::rvalue read = crow::json::load(response);
-            
-            const auto& users = read["User"];
-            
-            client_data data;
-            data.accessToken = read["AccessToken"].s();
-            auto& user = data.user;
-            user.name = users["Name"].s();
-            user.serverId = users["ServerId"].s();
-            user.Id = users["Id"].s();
-            user.primaryImageTag = users["PrimaryImageTag"].s();
-            user.hasPassword = users["HasPassword"].b();
-            user.hasConfiguredPassword = users["HasConfiguredPassword"].b();
-            user.hasConfiguredEasyPassword = users["HasConfiguredEasyPassword"].b();
-            user.enableAutoLogin = users["EnableAutoLogin"].b();
-            user.lastLoginDate = users["LastLoginDate"].s();
-            user.lastActivityDate = users["LastActivityDate"].s();
-            
-            GLOBALS.logged_in_users[std::string(username)] = data;
-            
             return auth_response::AUTHORIZED;
-        }
         
         return auth_response::ERROR;
+    }
+    
+    const client_data& jellyfin::getUserData(const std::string& username)
+    {
+        return GLOBALS.user_ids[username];
     }
     
 }

@@ -42,7 +42,8 @@ class BLT_CrowLogger : public crow::ILogHandler
         }
 };
 
-inline crow::response redirect(const std::string& loc){
+inline crow::response redirect(const std::string& loc)
+{
     crow::response res;
     res.redirect(loc);
     return res;
@@ -63,6 +64,7 @@ int main(int argc, const char** argv)
     auto args = parser.parse_args(argc, argv);
     cs::jellyfin::setToken(blt::arg_parse::get<std::string>(args["token"]));
     cs::jellyfin::processUserData();
+    cs::auth::init();
     
     BLT_INFO("Starting site %s.", SITE_NAME);
     crow::mustache::set_global_base(SITE_FILES_PATH);
@@ -75,7 +77,7 @@ int main(int argc, const char** argv)
     const auto cookie_age = 180 * 24 * 60 * 60;
     
     BLT_INFO("Init Crow with compression and logging enabled!");
-    crow::App<crow::CookieParser, Session> app {Session{
+    crow::App<crow::CookieParser, Session> app{Session{
             // customize cookies
             crow::CookieParser::Cookie("session").max_age(session_age).path("/"),
             // set session id length (small value only for demonstration purposes)
@@ -147,26 +149,32 @@ int main(int argc, const char** argv)
                 
                 crow::response res(303);
                 
-                cs::cookie_data data;
+                std::string user_agent;
+                
+                for (const auto& h : req.headers)
+                {
+                    if (h.first == "User-Agent")
+                        user_agent = h.second;
+                }
                 
                 // either redirect to clear the form if failed or pass user to index
-                if (cs::handleLoginPost(pp, data))
+                if (cs::checkUserAuthorization(pp))
                 {
+                    cs::cookie_data data = cs::createUserAuthTokens(pp, user_agent);
+                    cs::storeUserData(pp["username"], user_agent, data);
+                    
                     session.set("clientID", data.clientID);
                     session.set("clientToken", data.clientToken);
-                    if (pp.hasKey("remember_me")){
-                        auto value = pp["remember_me"];
+                    if (pp.hasKey("remember_me") && pp["remember_me"][0] == 'T')
+                    {
                         auto& cookie_context = app.get_context<crow::CookieParser>(req);
-                        if (value[0] == 'T')
-                        {
-                            cookie_context.set_cookie("clientID", data.clientID).path("/").max_age(cookie_age);
-                            cookie_context.set_cookie("clientToken", data.clientToken).path("/").max_age(cookie_age);
-                        }
+                        cookie_context.set_cookie("clientID", data.clientID).path("/").max_age(cookie_age);
+                        cookie_context.set_cookie("clientToken", data.clientToken).path("/").max_age(cookie_age);
                     }
                     res.set_header("Location", pp.hasKey("referer") ? pp["referer"] : "/");
                 } else
                     res.set_header("Location", "/login.html");
-                    
+                
                 return res;
             }
     );
@@ -199,6 +207,7 @@ int main(int argc, const char** argv)
     app.port(8080).multithreaded().run();
     
     cs::requests::cleanup();
+    cs::auth::cleanup();
     
     return 0;
 }
