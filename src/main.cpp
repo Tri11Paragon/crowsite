@@ -161,7 +161,9 @@ int main(int argc, const char** argv)
                 if (cs::checkUserAuthorization(pp))
                 {
                     cs::cookie_data data = cs::createUserAuthTokens(pp, user_agent);
-                    cs::storeUserData(pp["username"], user_agent, data);
+                    if (!cs::storeUserData(pp["username"], user_agent, data)){
+                        BLT_ERROR("Failed to update user data");
+                    }
                     
                     session.set("clientID", data.clientID);
                     session.set("clientToken", data.clientToken);

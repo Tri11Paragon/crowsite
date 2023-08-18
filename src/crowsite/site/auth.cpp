@@ -86,13 +86,16 @@ namespace cs
     
     bool storeUserData(const std::string& username, const std::string& useragent, const cookie_data& tokens)
     {
-        sql::statement insertStmt{
+        sql::statement insertStmt {
                 user_database,
                 "INSERT OR REPLACE INTO user_sessions (clientID, username, useragent, token) VALUES (?, ?, ?, ?);"
         };
         
         if (insertStmt.fail())
+        {
+            BLT_WARN("Failed to create insert user data %d : %s", insertStmt.error(), sqlite3_errstr(insertStmt.error()));
             return false;
+        }
         
         insertStmt.set(tokens.clientID, 0);
         insertStmt.set(username, 1);
@@ -100,19 +103,43 @@ namespace cs
         insertStmt.set(tokens.clientToken, 3);
         
         if (!insertStmt.execute())
+        {
+            BLT_WARN("Failed to insert user data %d : %s", insertStmt.error(), sqlite3_errstr(insertStmt.error()));
             return false;
+        }
         
-        sql::statement insertAuth {
+        sql::statement hasUser {
             user_database,
-            "INSERT OR REPLACE INTO user_permissions (username, permission) VALUES (?, ?);"
+            "SELECT permission FROM user_permissions WHERE username=?;"
         };
-        if (insertAuth.fail())
-            return false;
-        insertStmt.set(username, 0);
-        insertStmt.set(PERM_DEFAULT | (jellyfin::getUserData(username).isAdmin ? PERM_ADMIN : 0), 1);
         
-        if (!insertAuth.execute())
+        hasUser.set(username, 0);
+        
+        if (!hasUser.fail() && hasUser.execute()) {
+            if (!hasUser.hasRow()){
+                sql::statement insertAuth {
+                        user_database,
+                        "INSERT INTO user_permissions (username, permission) VALUES (?, ?);"
+                };
+                if (insertAuth.fail())
+                {
+                    BLT_WARN("Failed to create insert user perms %d : %s", insertAuth.error(), sqlite3_errstr(insertAuth.error()));
+                    return false;
+                }
+                insertAuth.set(username, 0);
+                insertAuth.set(PERM_DEFAULT | (jellyfin::getUserData(username).isAdmin ? PERM_ADMIN : 0), 1);
+                
+                if (!insertAuth.execute())
+                {
+                    BLT_WARN("Failed to insert user perms %d : %s", insertAuth.error(), sqlite3_errstr(insertAuth.error()));
+                    return false;
+                }
+            }
+        } else
+        {
+            BLT_WARN("Failed to insert has user %d : %s", hasUser.error(), sqlite3_errstr(hasUser.error()));
             return false;
+        }
         
         return true;
     }
@@ -121,7 +148,7 @@ namespace cs
     {
         sql::statement stmt {
             user_database,
-            "SELECT username FROM user_sessions WHERE clientID='?' AND token='?';"
+            "SELECT username FROM user_sessions WHERE clientID=? AND token=?;"
         };
         if (stmt.fail())
             return false;
@@ -140,7 +167,7 @@ namespace cs
     {
         sql::statement stmt {
             user_database,
-            "SELECT username FROM user_sessions WHERE clientID='?';"
+            "SELECT username FROM user_sessions WHERE clientID=?;"
         };
         if (stmt.fail())
             return "";
@@ -152,7 +179,7 @@ namespace cs
     {
         sql::statement stmt {
             user_database,
-            "SELECT permission FROM user_permissions WHERE username='?';"
+            "SELECT permission FROM user_permissions WHERE username=?;"
         };
         if (stmt.fail())
             return 0;

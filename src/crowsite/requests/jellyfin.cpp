@@ -98,7 +98,7 @@ namespace cs::jellyfin
         return auth_response::ERROR;
     }
     
-    const client_data& jellyfin::getUserData(const std::string& username)
+    const client_data& getUserData(const std::string& username)
     {
         return GLOBALS.user_ids[username];
     }

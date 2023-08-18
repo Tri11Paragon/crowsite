@@ -61,7 +61,7 @@ namespace cs::sql
             statement* set(const T& t, int column)
             {
                 // make api consistent
-                column = column - 1;
+                column = column + 1;
                 if constexpr (std::is_floating_point_v<T>)
                 {
                     err = sqlite3_bind_double(stmt, column, t);
