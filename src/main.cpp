@@ -14,6 +14,9 @@
 #include <crow/middlewares/session.h>
 #include <crow/middlewares/cookie_parser.h>
 
+using Session = crow::SessionMiddleware<crow::FileStore>;
+using CrowApp = crow::App<crow::CookieParser, Session>;
+
 class BLT_CrowLogger : public crow::ILogHandler
 {
     public:
@@ -42,11 +45,104 @@ class BLT_CrowLogger : public crow::ILogHandler
         }
 };
 
-inline crow::response redirect(const std::string& loc)
+struct site_params
 {
-    crow::response res;
-    res.redirect(loc);
+    CrowApp& app;
+    cs::CacheEngine& engine;
+    const crow::request& req;
+    const std::string& name;
+};
+
+inline crow::response redirect(const std::string& loc = "/", int code = 303)
+{
+    crow::response res(code);
+    res.set_header("Location", loc);
     return res;
+}
+
+/**
+ * Note this function destroys the user's session and any login related cookies!
+ */
+void destroyUserSession(CrowApp& app, const crow::request& req)
+{
+    auto& session = app.get_context<Session>(req);
+    auto& cookie_context = app.get_context<crow::CookieParser>(req);
+    
+    session.set("clientID", "");
+    session.set("clientToken", "");
+    cookie_context.set_cookie("clientID", "");
+    cookie_context.set_cookie("clientToken", "");
+}
+
+bool checkAndUpdateUserSession(CrowApp& app, const crow::request& req)
+{
+    auto& session = app.get_context<Session>(req);
+    auto& cookie_context = app.get_context<crow::CookieParser>(req);
+    
+    auto s_clientID = session.get("clientID", "");
+    auto s_clientToken = session.get("clientToken", "");
+    
+    auto c_clientID = cookie_context.get_cookie("clientID");
+    auto c_clientToken = cookie_context.get_cookie("clientToken");
+    
+    if ((!c_clientID.empty() && !c_clientToken.empty()) && (s_clientID != c_clientID || s_clientToken != c_clientToken))
+    {
+        session.set("clientID", c_clientID);
+        session.set("clientToken", c_clientToken);
+        return true;
+    }
+    return false;
+}
+
+bool isUserLoggedIn(CrowApp& app, const crow::request& req)
+{
+    auto& session = app.get_context<Session>(req);
+    auto s_clientID = session.get("clientID", "");
+    auto s_clientToken = session.get("clientToken", "");
+    return cs::isUserLoggedIn(s_clientID, s_clientToken);
+}
+
+bool isUserAdmin(CrowApp& app, const crow::request& req)
+{
+    auto& session = app.get_context<Session>(req);
+    auto s_clientID = session.get("clientID", "");
+    return cs::isUserAdmin(cs::getUserFromID(s_clientID));
+}
+
+crow::response handle_root_page(const site_params& params)
+{
+    //auto page = crow::mustache::load("index.html"); //
+    //return "<html><head><title>Hello There</title></head><body><h1>Suck it " + name + "</h1></body></html>";
+//                BLT_TRACE(req.body);
+//                for (const auto& h : req.headers)
+//                    BLT_TRACE("Header: %s = %s", h.first.c_str(), h.second.c_str());
+//                BLT_TRACE(req.raw_url);
+//                BLT_TRACE(req.url);
+//                BLT_TRACE(req.remote_ip_address);
+//                for (const auto& v : req.url_params.keys())
+//                    BLT_TRACE("URL: %s = %s", v.c_str(), req.url_params.get(v));
+    if (params.name.ends_with(".html"))
+    {
+        crow::mustache::context ctx;
+        // we don't want to pass all get parameters to the context to prevent leaking
+        auto referer = params.req.url_params.get("referer");
+        if (referer)
+            ctx["referer"] = referer;
+        auto page = crow::mustache::compile(params.engine.fetch(params.name));
+        return page.render(ctx);
+    }
+
+//                crow::mustache::context ctx({{"person", name}});
+//                auto user_page = crow::mustache::compile(engine.fetch("index.html"));
+    
+    return params.engine.fetch("default.html");
+}
+
+crow::response handle_auth_page(const site_params& params, uint32_t required_perms)
+{
+    
+    
+    return handle_root_page(params);
 }
 
 int main(int argc, const char** argv)
@@ -58,9 +154,8 @@ int main(int argc, const char** argv)
     
     blt::arg_parse parser;
     parser.addArgument(blt::arg_builder("--tests").setAction(blt::arg_action_t::STORE_TRUE).build());
+    parser.addArgument(blt::arg_builder({"--port", "-p"}).setDefault(8080).build());
     parser.addArgument(blt::arg_builder("token").build());
-    parser.addArgument(blt::arg_builder("user").build());
-    parser.addArgument(blt::arg_builder("pass").build());
     auto args = parser.parse_args(argc, argv);
     cs::jellyfin::setToken(blt::arg_parse::get<std::string>(args["token"]));
     cs::jellyfin::processUserData();
@@ -71,13 +166,11 @@ int main(int argc, const char** argv)
     static BLT_CrowLogger bltCrowLogger{};
     crow::logger::setHandler(&bltCrowLogger);
     
-    using Session = crow::SessionMiddleware<crow::FileStore>;
-    
     const auto session_age = 24 * 60 * 60;
     const auto cookie_age = 180 * 24 * 60 * 60;
     
     BLT_INFO("Init Crow with compression and logging enabled!");
-    crow::App<crow::CookieParser, Session> app{Session{
+    CrowApp app{Session{
             // customize cookies
             crow::CookieParser::Cookie("session").max_age(session_age).path("/"),
             // set session id length (small value only for demonstration purposes)
@@ -112,33 +205,24 @@ int main(int argc, const char** argv)
             }
     );
     
+    CROW_ROUTE(app, "/login.html")(
+            [&app, &engine](const crow::request& req) -> crow::response {
+                if (isUserLoggedIn(app, req))
+                    return redirect("/");
+                return handle_root_page({app, engine, req, "login.html"});
+            }
+    );
+    
+    CROW_ROUTE(app, "/logout.html")(
+            [&app](const crow::request& req) -> crow::response {
+                destroyUserSession(app, req);
+                return redirect("/");
+            }
+    );
+    
     CROW_ROUTE(app, "/<string>")(
-            [&](const crow::request& req, const std::string& name) -> crow::response {
-                //auto page = crow::mustache::load("index.html"); //
-                //return "<html><head><title>Hello There</title></head><body><h1>Suck it " + name + "</h1></body></html>";
-//                BLT_TRACE(req.body);
-//                for (const auto& h : req.headers)
-//                    BLT_TRACE("Header: %s = %s", h.first.c_str(), h.second.c_str());
-//                BLT_TRACE(req.raw_url);
-//                BLT_TRACE(req.url);
-//                BLT_TRACE(req.remote_ip_address);
-//                for (const auto& v : req.url_params.keys())
-//                    BLT_TRACE("URL: %s = %s", v.c_str(), req.url_params.get(v));
-                if (name.ends_with(".html"))
-                {
-                    crow::mustache::context ctx;
-                    // we don't want to pass all get parameters to the context to prevent leaking
-                    auto referer = req.url_params.get("referer");
-                    if (referer)
-                        ctx["referer"] = referer;
-                    auto page = crow::mustache::compile(engine.fetch(name));
-                    return page.render(ctx);
-                }
-                
-                crow::mustache::context ctx({{"person", name}});
-                auto user_page = crow::mustache::compile(engine.fetch("index.html"));
-                
-                return user_page.render(ctx);
+            [&app, &engine](const crow::request& req, const std::string& name) -> crow::response {
+                return handle_root_page({app, engine, req, name});
             }
     );
     
@@ -147,21 +231,21 @@ int main(int argc, const char** argv)
                 cs::parser::Post pp(req.body);
                 auto& session = app.get_context<Session>(req);
                 
-                crow::response res(303);
-                
                 std::string user_agent;
                 
                 for (const auto& h : req.headers)
-                {
                     if (h.first == "User-Agent")
+                    {
                         user_agent = h.second;
-                }
+                        break;
+                    }
                 
                 // either redirect to clear the form if failed or pass user to index
                 if (cs::checkUserAuthorization(pp))
                 {
                     cs::cookie_data data = cs::createUserAuthTokens(pp, user_agent);
-                    if (!cs::storeUserData(pp["username"], user_agent, data)){
+                    if (!cs::storeUserData(pp["username"], user_agent, data))
+                    {
                         BLT_ERROR("Failed to update user data");
                     }
                     
@@ -173,17 +257,15 @@ int main(int argc, const char** argv)
                         cookie_context.set_cookie("clientID", data.clientID).path("/").max_age(cookie_age);
                         cookie_context.set_cookie("clientToken", data.clientToken).path("/").max_age(cookie_age);
                     }
-                    res.set_header("Location", pp.hasKey("referer") ? pp["referer"] : "/");
+                    return redirect(pp.hasKey("referer") ? pp["referer"] : "/");
                 } else
-                    res.set_header("Location", "/login.html");
-                
-                return res;
+                    return redirect("login.html");
             }
     );
     
     CROW_ROUTE(app, "/")(
-            [&engine]() {
-                return engine.fetch("index.html");
+            [&engine, &app](const crow::request& req) {
+                return handle_root_page({app, engine, req, "index.html"});
             }
     );
     
@@ -206,7 +288,9 @@ int main(int argc, const char** argv)
                 }
             }
     );
-    app.port(8080).multithreaded().run();
+    auto port = blt::arg_parse::get_cast<int32_t>(args["port"]);
+    BLT_INFO("Starting Crow website on port %d", port);
+    app.port(port).multithreaded().run();
     
     cs::requests::cleanup();
     cs::auth::cleanup();
