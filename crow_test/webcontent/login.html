@@ -3,26 +3,30 @@
   <head>
     <link rel="stylesheet" href="/static/css/home.css">
     <link rel="stylesheet" href="/static/css/bar.css">
+    <link rel="stylesheet" href="/static/css/menu_bar.css">
+    <meta charset="UTF-8">
+    <meta name="description" content="Login to {{$SITE_NAME}}">
+    <meta name="keywords" content="{{$SITE_NAME}}">
+    <meta name="author" content="Brett">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{$SITE_TITLE}}</title>
   </head>
-  <body>
+  <body class="blur-bgimage" style="background-image: url({{$SITE_BACKGROUND}})">
     <div class="center">
         <div class="body">
-            <div class="titlebar">
-              <button class="bar"><a href="/home.html">home</a></button>
-              <button class="bar"><a href="/projects.html">projects</a></button>
-            </div>
+            {{@menu_bar.part}}
+
             <div class="center">
-                <form action="/res/login" method="post">
-                    <label for="username">Username</label><br>
-                    <input type="text" id="username" name="username"><br>
-                    <label for="password">Password</label><br>
-                    <input type="password" id="password" name="password"><br>
-                    <label for="remember_me">Remember Me?</label><br>
-                    <input type="checkbox" id="remember_me" value="T" name="remember_me"><br>
-                    <input type="submit" value="Login">
-                </form>
-            </div>
+              <form action="/res/login" method="post">
+                  <label for="username">Username</label><br>
+                  <input type="text" id="username" name="username"><br>
+                  <label for="password">Password</label><br>
+                  <input type="password" id="password" name="password"><br>
+                  <label for="remember_me">Remember Me?</label><br>
+                  <input type="checkbox" id="remember_me" value="T" name="remember_me"><br>
+                  <input type="submit" value="Login">
+              </form>
+          </div>
         </div>
     </div>
   </body>
