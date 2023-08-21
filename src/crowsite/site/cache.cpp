@@ -214,7 +214,7 @@ namespace cs
                     {
                         return !context.contains(token) || context.at(token).empty();
                     }
-                    
+                    // http://www.cs.unb.ca/~wdu/cs4613/a2ans.htm
                     bool factor(const RuntimeContext& context)
                     {
                         if (!hasNextToken())
