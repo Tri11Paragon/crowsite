@@ -7,6 +7,7 @@
 #include "crowsite/utility.h"
 #include <algorithm>
 #include <blt/std/time.h>
+#include <blt/parse/mustache.h>
 
 namespace cs
 {

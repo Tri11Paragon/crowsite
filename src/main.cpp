@@ -1,12 +1,9 @@
-#include <iostream>
 #include <crowsite/crow_includes.h>
 #include <blt/std/logging.h>
-#include <blt/std/string.h>
-#include <blt/profiling/profiler.h>
-#include <sstream>
 #include <crowsite/utility.h>
 #include <crowsite/site/cache.h>
 #include <crowsite/beemovie.h>
+#include <crowsite/crow_utility.h>
 #include <crowsite/requests/jellyfin.h>
 #include <crowsite/requests/curl.h>
 #include <blt/parse/argparse.h>
@@ -52,13 +49,6 @@ struct site_params
     const crow::request& req;
     const std::string& name;
 };
-
-inline crow::response redirect(const std::string& loc = "/", int code = 303)
-{
-    crow::response res(code);
-    res.set_header("Location", loc);
-    return res;
-}
 
 /**
  * Note this function destroys the user's session and any login related cookies!
@@ -156,7 +146,7 @@ crow::response handle_root_page(const site_params& params)
 crow::response handle_auth_page(const site_params& params)
 {
     if (isUserAdmin(params.app, params.req))
-        return redirect("/login.html");
+        return cs::redirect("/login.html");
     
     
     
@@ -226,7 +216,7 @@ int main(int argc, const char** argv)
     CROW_ROUTE(app, "/login.html")(
             [&app, &engine](const crow::request& req) -> crow::response {
                 if (isUserLoggedIn(app, req))
-                    return redirect("/");
+                    return cs::redirect("/");
                 return handle_root_page({app, engine, req, "login.html"});
             }
     );
@@ -234,7 +224,7 @@ int main(int argc, const char** argv)
     CROW_ROUTE(app, "/logout.html")(
             [&app](const crow::request& req) -> crow::response {
                 destroyUserSession(app, req);
-                return redirect("/");
+                return cs::redirect("/");
             }
     );
     
@@ -258,14 +248,14 @@ int main(int argc, const char** argv)
                         break;
                     }
                 
-                // either redirect to clear the form if failed or pass user to index
+                // either cs::redirect to clear the form if failed or pass user to index
                 if (cs::checkUserAuthorization(pp))
                 {
                     cs::cookie_data data = cs::createUserAuthTokens(pp, user_agent);
                     if (!cs::storeUserData(pp["username"], user_agent, data))
                     {
                         BLT_ERROR("Failed to update user data");
-                        return redirect("login.html");
+                        return cs::redirect("login.html");
                     }
                     
                     session.set("clientID", data.clientID);
@@ -276,9 +266,9 @@ int main(int argc, const char** argv)
                         cookie_context.set_cookie("clientID", data.clientID).path("/").max_age(cookie_age);
                         cookie_context.set_cookie("clientToken", data.clientToken).path("/").max_age(cookie_age);
                     }
-                    return redirect(pp.hasKey("referer") ? pp["referer"] : "/");
+                    return cs::redirect(pp.hasKey("referer") ? pp["referer"] : "/");
                 } else
-                    return redirect("login.html");
+                    return cs::redirect("login.html");
             }
     );
     
