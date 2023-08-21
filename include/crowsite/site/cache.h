@@ -39,6 +39,7 @@ namespace cs {
              * @return memory usage of the pages cache in bytes
              */
             uint64_t calculateMemoryUsage();
+            void resolveLinks(const std::string& file, HTMLPage& page);
             void loadPage(const std::string& path);
             /**
              * Prunes the cache starting with the oldest pages we have loaded. (in bytes)

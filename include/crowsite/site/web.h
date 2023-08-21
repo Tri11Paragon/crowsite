@@ -8,8 +8,55 @@
 #include <memory>
 #include <string>
 #include <crowsite/config.h>
+#include <utility>
 
 namespace cs {
+    
+    struct StringLexer
+    {
+        private:
+            std::string str;
+            size_t index = 0;
+        public:
+            explicit StringLexer(std::string str): str(std::move(str))
+            {}
+            
+            inline bool hasNext()
+            {
+                if (index >= str.size())
+                    return false;
+                return true;
+            }
+            
+            inline bool hasTemplatePrefix(char c)
+            {
+                if (index + 2 >= str.size())
+                    return false;
+                return str[index] == '{' && str[index + 1] == '{' && str[index + 2] == c;
+            }
+            
+            inline bool hasTemplateSuffix()
+            {
+                if (index + 1 >= str.size())
+                    return false;
+                return str[index] == '}' && str[index + 1] == '}';
+            }
+            
+            inline void consumeTemplatePrefix()
+            {
+                index += 3;
+            }
+            
+            inline void consumeTemplateSuffix()
+            {
+                index += 2;
+            }
+            
+            inline char consume()
+            {
+                return str[index++];
+            }
+    };
     
     class StaticContext {
         private:
@@ -46,7 +93,7 @@ namespace cs {
              */
             std::string render(StaticContext& context);
             
-            inline std::string const& getRawSite() {
+            inline std::string& getRawSite() {
                 return m_SiteData;
             }
     };

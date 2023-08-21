@@ -123,23 +123,39 @@ crow::response handle_root_page(const site_params& params)
 //                    BLT_TRACE("URL: %s = %s", v.c_str(), req.url_params.get(v));
     if (params.name.ends_with(".html"))
     {
+        checkAndUpdateUserSession(params.app, params.req);
+        auto& session = params.app.get_context<Session>(params.req);
+        auto s_clientID = session.get("clientID", "");
+        auto s_clientToken = session.get("clientToken", "");
+        auto user_perms = cs::getUserPermissions(cs::getUserFromID(s_clientID));
+        
         crow::mustache::context ctx;
-        // we don't want to pass all get parameters to the context to prevent leaking
+        
+        // pass perms in
+        if (user_perms & cs::PERM_ADMIN)
+            ctx["_admin"] = true;
+        
+        if (cs::isUserLoggedIn(s_clientID, s_clientToken))
+        {
+            ctx["_logged_in"] = true;
+        }
+        
+        // we don't want to pass all get parameters to the context to prevent leaking information
         auto referer = params.req.url_params.get("referer");
         if (referer)
             ctx["referer"] = referer;
         auto page = crow::mustache::compile(params.engine.fetch(params.name));
         return page.render(ctx);
     }
-
-//                crow::mustache::context ctx({{"person", name}});
-//                auto user_page = crow::mustache::compile(engine.fetch("index.html"));
     
     return params.engine.fetch("default.html");
 }
 
-crow::response handle_auth_page(const site_params& params, uint32_t required_perms)
+crow::response handle_auth_page(const site_params& params)
 {
+    if (isUserAdmin(params.app, params.req))
+        return redirect("/login.html");
+    
     
     
     return handle_root_page(params);
@@ -247,6 +263,7 @@ int main(int argc, const char** argv)
                     if (!cs::storeUserData(pp["username"], user_agent, data))
                     {
                         BLT_ERROR("Failed to update user data");
+                        return redirect("login.html");
                     }
                     
                     session.set("clientID", data.clientID);

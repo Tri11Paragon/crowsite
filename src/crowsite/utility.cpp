@@ -5,12 +5,16 @@
 #include <blt/std/string.h>
 #include <curl/curl.h>
 
-namespace cs {
+namespace cs
+{
     
-    namespace parser {
-        Post::Post(const std::string& input) {
+    namespace parser
+    {
+        Post::Post(const std::string& input)
+        {
             auto pairs = blt::string::split(input, "&");
-            for (const auto& pair : pairs) {
+            for (const auto& pair : pairs)
+            {
                 auto kv = blt::string::split(pair, "=");
                 auto key = kv[0];
                 auto value = kv[1];
@@ -22,13 +26,16 @@ namespace cs {
             }
         }
         
-        const std::string& Post::operator[](const std::string& key) {
+        const std::string& Post::operator[](const std::string& key)
+        {
             return m_Values[key];
         }
         
-        std::string Post::dump() {
+        std::string Post::dump()
+        {
             std::string out;
-            for (const auto& pair : m_Values) {
+            for (const auto& pair : m_Values)
+            {
                 out += "[";
                 out += pair.first;
                 out += "] = ";
@@ -44,8 +51,10 @@ namespace cs {
         }
     }
     
-    namespace fs {
-        std::string createStaticFilePath(const std::string& file) {
+    namespace fs
+    {
+        std::string createStaticFilePath(const std::string& file)
+        {
             auto path = std::string(CROW_STATIC_DIRECTORY);
             if (!path.ends_with('/'))
                 path += '/';
@@ -55,7 +64,9 @@ namespace cs {
                 throw std::runtime_error("Unable to create file path because file does not exist!");
             return path;
         }
-        std::string createWebFilePath(const std::string& file){
+        
+        std::string createWebFilePath(const std::string& file)
+        {
             auto path = std::string(SITE_FILES_PATH);
             if (!path.ends_with('/'))
                 path += '/';

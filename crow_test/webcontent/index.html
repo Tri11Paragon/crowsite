@@ -3,6 +3,12 @@
   <head>
     <link rel="stylesheet" href="/static/css/home.css">
     <link rel="stylesheet" href="/static/css/bar.css">
+    <link rel="javascript" href="cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="Brett">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{$SITE_TITLE}}</title>
   </head>
   <body class="blur-bgimage" style="background-image: url({{$SITE_BACKGROUND}})">
@@ -14,6 +20,9 @@
             </div>
             <div class="center">
               HAXsdsad
+              {{#_admin}}
+                Admin detected
+              {{/_admin}}
             </div>
         </div>
     </div>
