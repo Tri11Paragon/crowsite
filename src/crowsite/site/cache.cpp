@@ -10,6 +10,72 @@
 
 namespace cs
 {
+    struct StringLexer
+    {
+        private:
+            std::string str;
+            size_t index = 0;
+        public:
+            explicit StringLexer(std::string str): str(std::move(str))
+            {}
+            
+            inline bool hasNext()
+            {
+                if (index >= str.size())
+                    return false;
+                return true;
+            }
+            
+            inline bool hasTemplatePrefix(char c)
+            {
+                if (index + 2 >= str.size())
+                    return false;
+                return str[index] == '{' && str[index + 1] == '{' && str[index + 2] == c;
+            }
+            
+            inline bool hasTemplateSuffix()
+            {
+                if (index + 1 >= str.size())
+                    return false;
+                return str[index] == '}' && str[index + 1] == '}';
+            }
+            
+            inline void consumeTemplatePrefix()
+            {
+                // because any custom mustache syntax will have to have a prefix like '$' or '@'
+                // it is fine that we make the assumption of 3 characters consumed.
+                index += 3;
+            }
+            
+            inline void consumeTemplateSuffix()
+            {
+                index += 2;
+            }
+            
+            /**
+             * This function assumes hasTemplatePrefix(char) has returned true and will consume both the prefix and suffix
+             * @return the token found between the prefix and suffix
+             * @throws LexerSyntaxError if the parser is unable to process a full token
+             */
+            inline std::string consumeToken(){
+                consumeTemplatePrefix();
+                std::string token;
+                while (!hasTemplateSuffix()) {
+                    if (!hasNext()) {
+                        throw LexerSyntaxError();
+                    }
+                    token += consume();
+                }
+                consumeTemplateSuffix();
+                return token;
+            }
+            
+            inline char consume()
+            {
+                return str[index++];
+            }
+    };
+    
     
     double toSeconds(uint64_t v)
     {
@@ -92,7 +158,7 @@ namespace cs
         auto fullPath = cs::fs::createWebFilePath(path);
         auto page = HTMLPage::load(fullPath);
         resolveLinks(path, *page);
-        auto renderedPage = page->render(m_Context);
+        const auto& renderedPage = page->getRawSite();
         m_Pages[path] = CacheValue{
                 blt::system::getCurrentTimeNanoseconds(),
                 std::filesystem::last_write_time(fullPath),
@@ -152,28 +218,36 @@ namespace cs
         {
             if (lexer.hasTemplatePrefix('@'))
             {
-                lexer.consumeTemplatePrefix();
-                std::string token;
-                while (!lexer.hasTemplateSuffix()) {
-                    if (!lexer.hasNext()) {
-                        BLT_WARN("Invalid template syntax. EOF occurred before template was fully processed!");
-                        break;
-                    }
-                    token += lexer.consume();
-                }
-                lexer.consumeTemplateSuffix();
-                for (const auto& suffix : valid_file_endings){
-                    if (token.ends_with(suffix)) {
-                        auto path = cs::fs::createWebFilePath(token);
-                        if (path == file){
+                auto token = lexer.consumeToken();
+                for (const auto& suffix : valid_file_endings)
+                {
+                    if (token.ends_with(suffix))
+                    {
+                        if (token == file)
+                        {
                             BLT_WARN("Recursive load detected!");
-                            BLT_WARN("Caching Engine will ignore this attempt, however, it is recommended that you remove the recursive call.");
+                            BLT_WARN("Caching Engine will ignore this, however, it is recommended that you remove the recursive call.");
                             BLT_WARN("Detected in file '%s' offending link '%s'", file.c_str(), token.c_str());
+                            break;
                         }
-                        resolvedSite += fetch(path);
+                        resolvedSite += fetch(token);
                         break;
                     }
                 }
+            } else if (lexer.hasTemplatePrefix('$'))
+            {
+                auto token = lexer.consumeToken();
+                if (std::find_if(
+                        m_Context.begin(), m_Context.end(),
+                        [&token](auto in) -> bool {
+                            return token == in.first;
+                        }
+                ) == m_Context.end())
+                {
+                    // unable to find the token, we should throw an error to tell the user! (or admin in this case)
+                    BLT_WARN("Unable to find token '%s'!", token.c_str());
+                } else
+                    resolvedSite += m_Context[token];
             } else
                 resolvedSite += lexer.consume();
         }

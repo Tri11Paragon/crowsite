@@ -8,8 +8,8 @@
 #include <unordered_map>
 #include <blt/std/hashmap.h>
 
-#define CROW_STATIC_DIRECTORY "/mnt/games/Projects/cpp/crowsite/crow_test/static/"
-#define SITE_FILES_PATH "/mnt/games/Projects/cpp/crowsite/crow_test"
+#define CROW_STATIC_DIRECTORY "/home/brett/projects/cpp/crowsite/crow_test/static/"
+#define SITE_FILES_PATH "/home/brett/projects/cpp/crowsite/crow_test"
 #define CROW_STATIC_ENDPOINT "/static/<path>"
 
 #define MILES_SITE

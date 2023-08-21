@@ -138,6 +138,8 @@ crow::response handle_root_page(const site_params& params)
         if (cs::isUserLoggedIn(s_clientID, s_clientToken))
         {
             ctx["_logged_in"] = true;
+        } else {
+            ctx["_not_logged_in"] = true;
         }
         
         // we don't want to pass all get parameters to the context to prevent leaking information

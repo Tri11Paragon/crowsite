@@ -10,6 +10,11 @@
 
 namespace cs {
     
+    class LexerSyntaxError : public std::runtime_error {
+        public:
+            LexerSyntaxError(): std::runtime_error("Invalid template syntax. EOF occurred before template was fully processed!"){}
+    };
+    
     constexpr uint64_t toMB = 1024 * 1024;
 
     struct CacheSettings {

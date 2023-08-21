@@ -13,35 +13,6 @@
 namespace cs
 {
     
-    class LexerSyntaxException : public std::runtime_error
-    {
-        public:
-            explicit LexerSyntaxException(const std::string& token):
-                    std::runtime_error(
-                            "Extended-mustache syntax error! An opening '{{' must be closed by '}}'! (near: '" +
-                            token + "')"
-                    )
-            {}
-    };
-    
-    class LexerException : public std::runtime_error
-    {
-        public:
-            explicit LexerException(const std::string& message):
-                    std::runtime_error("Extended-mustache syntax processing error! " + message)
-            {}
-    };
-    
-    class SyntaxException : public std::runtime_error
-    {
-        public:
-            explicit SyntaxException():
-                    std::runtime_error(
-                            "Extended-mustache syntax error! Static context keys should not contain $"
-                    )
-            {}
-    };
-    
     std::unique_ptr<HTMLPage> HTMLPage::load(const std::string& path)
     {
         std::string htmlSource;
@@ -72,51 +43,4 @@ namespace cs
     
     HTMLPage::HTMLPage(std::string siteData): m_SiteData(std::move(siteData))
     {}
-    
-    std::string HTMLPage::render(StaticContext& context)
-    {
-        std::string processedSiteData = m_SiteData;
-        
-        std::string buffer;
-        
-        StringLexer lexer(processedSiteData);
-        
-        while (lexer.hasNext())
-        {
-            if (lexer.hasTemplatePrefix('$'))
-            {
-                lexer.consumeTemplatePrefix();
-                std::string token;
-                while (!lexer.hasTemplateSuffix())
-                {
-                    if (!lexer.hasNext())
-                    {
-                        BLT_FATAL("Invalid template syntax. EOF occurred before template was fully processed!");
-                        throw LexerSyntaxException(token);
-                    }
-                    token += lexer.consume();
-                }
-                lexer.consumeTemplateSuffix();
-                if (std::find_if(
-                        context.begin(), context.end(),
-                        [&token](auto in) -> bool {
-                            return token == in.first;
-                        }
-                ) == context.end())
-                {
-                    // unable to find the token, we should throw an error to tell the user! (or admin in this case)
-                    BLT_WARN("Unable to find token '%s'!", token.c_str());
-                } else
-                    buffer += context[token];
-            } else
-                buffer += lexer.consume();
-        }
-        
-        return buffer;
-    }
-    
-    void HTMLPage::resolveResources()
-    {
-    
-    }
 }
