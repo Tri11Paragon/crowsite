@@ -4,34 +4,46 @@
 #include <crowsite/site/cache.h>
 #include <vector>
 #include "blt/std/logging.h"
+#include "blt/std/string.h"
 #include "crowsite/utility.h"
 #include <algorithm>
 #include <blt/std/time.h>
-#include <blt/parse/mustache.h>
+#include <optional>
 
 namespace cs
 {
-    struct StringLexer
+    class LexerBase
     {
-        private:
+        protected:
             std::string str;
             size_t index = 0;
         public:
-            explicit StringLexer(std::string str): str(std::move(str))
+            explicit LexerBase(std::string str): str(std::move(str))
             {}
             
             inline bool hasNext()
             {
-                if (index >= str.size())
-                    return false;
-                return true;
+                return index < str.size();
             }
             
-            inline bool hasTemplatePrefix(char c)
+            inline char peekPrefix()
             {
-                if (index + 2 >= str.size())
-                    return false;
-                return str[index] == '{' && str[index + 1] == '{' && str[index + 2] == c;
+                return str[index + 2];
+            }
+            
+            inline char consume()
+            {
+                return str[index++];
+            }
+            
+            inline void consumeTemplatePrefix()
+            {
+                index += 3;
+            }
+            
+            inline void consumeTemplateSuffix()
+            {
+                index += 2;
             }
             
             inline bool hasTemplateSuffix()
@@ -41,28 +53,19 @@ namespace cs
                 return str[index] == '}' && str[index + 1] == '}';
             }
             
-            inline void consumeTemplatePrefix()
-            {
-                // because any custom mustache syntax will have to have a prefix like '$' or '@'
-                // it is fine that we make the assumption of 3 characters consumed.
-                index += 3;
-            }
-            
-            inline void consumeTemplateSuffix()
-            {
-                index += 2;
-            }
-            
             /**
-             * This function assumes hasTemplatePrefix(char) has returned true and will consume both the prefix and suffix
+             * This function assumes hasTemplatePrefix(char) has returned true and will consume the prefix / suffix
              * @return the token found between the prefix and suffix
              * @throws LexerSyntaxError if the parser is unable to process a full token
              */
-            inline std::string consumeToken(){
+            inline std::string consumeToken()
+            {
                 consumeTemplatePrefix();
                 std::string token;
-                while (!hasTemplateSuffix()) {
-                    if (!hasNext()) {
+                while (!hasTemplateSuffix())
+                {
+                    if (!hasNext())
+                    {
                         throw LexerSyntaxError();
                     }
                     token += consume();
@@ -70,11 +73,129 @@ namespace cs
                 consumeTemplateSuffix();
                 return token;
             }
+    };
+    
+    class CacheLexer : public LexerBase
+    {
+        public:
+            explicit CacheLexer(std::string str): LexerBase(std::move(str))
+            {}
             
-            inline char consume()
+            static inline bool isCharNext(char c)
             {
-                return str[index++];
+                switch (c)
+                {
+                    case '$':
+                    case '@':
+                        return true;
+                    default:
+                        return false;
+                }
             }
+            
+            inline bool hasTemplatePrefix()
+            {
+                if (index + 2 >= str.size())
+                    return false;
+                return str[index] == '{' && str[index + 1] == '{' && isCharNext(str[index + 2]);
+            }
+    };
+    
+    class RuntimeLexer : public LexerBase
+    {
+        private:
+            class LogicalEval
+            {
+                private:
+                    enum class TokenType
+                    {
+                        AND,    // &&
+                        OR,     // ||
+                        NOT,    // !
+                        OPEN,   // (
+                        CLOSE   // )
+                    };
+                    struct Token {
+                        TokenType type;
+                        std::optional<std::string> value;
+                    };
+                    std::vector<Token> tokens;
+                    size_t m_index = 0;
+                public:
+                    void processString(const std::string& str)
+                    {
+                        size_t index = 0;
+                        while (index < str.size())
+                        {
+                            char c = str[index++];
+                            if (c == '&' || c == '|'){
+                            
+                            } else if (c == '!') {
+                            
+                            } else if (c == '(') {
+                                tokens.emplace_back(TokenType::OPEN);
+                            } else if (c == ')') {
+                                tokens.emplace_back(TokenType::CLOSE);
+                            }
+                        }
+                    }
+            };
+        
+        public:
+            explicit RuntimeLexer(std::string str): LexerBase(std::move(str))
+            {}
+            
+            inline bool hasTemplatePrefix(char c = '%')
+            {
+                if (index + 2 >= str.size())
+                    return false;
+                return str[index] == '{' && str[index + 1] == '{' && str[index + 2] == c;
+            }
+            
+            static std::string consumeToEndTemplate(const std::string& tokenName)
+            {
+            
+            }
+            
+            static size_t findLastTagLocation(const std::string& tag, const std::string& data)
+            {
+                std::vector<size_t> tagLocations{};
+                RuntimeLexer lexer(data);
+                while (lexer.hasNext())
+                {
+                    if (lexer.hasTemplatePrefix('/'))
+                    {
+                        auto loc = lexer.index;
+                        auto token = lexer.consumeToken();
+                        if (tag == token)
+                            tagLocations.push_back(loc);
+                    } else
+                        lexer.consume();
+                }
+                if (tagLocations.empty())
+                    throw LexerSearchFailure(tag);
+                return tagLocations[tagLocations.size() - 1];
+            }
+            
+            static std::string searchAndReplace(const std::string& data, const RuntimeContext& context)
+            {
+                RuntimeLexer lexer(data);
+                std::string results;
+                while (lexer.hasNext())
+                {
+                    if (lexer.hasTemplatePrefix())
+                    {
+                        auto token = lexer.consumeToken();
+                        auto searchField = lexer.str.substr(lexer.index);
+                        auto endTokenLoc = RuntimeLexer::findLastTagLocation(token, searchField);
+                        
+                        auto
+                    } else
+                        results += lexer.consume();
+                }
+                return results;
+            }
+        
     };
     
     
@@ -206,7 +327,7 @@ namespace cs
     
     void CacheEngine::resolveLinks(const std::string& file, HTMLPage& page)
     {
-        StringLexer lexer(page.getRawSite());
+        CacheLexer lexer(page.getRawSite());
         std::string resolvedSite;
         
         const std::string valid_file_endings[3] = {
@@ -217,13 +338,14 @@ namespace cs
         
         while (lexer.hasNext())
         {
-            if (lexer.hasTemplatePrefix('@'))
+            if (lexer.hasTemplatePrefix())
             {
+                auto prefix = lexer.peekPrefix();
                 auto token = lexer.consumeToken();
-                for (const auto& suffix : valid_file_endings)
+                
+                switch (prefix)
                 {
-                    if (token.ends_with(suffix))
-                    {
+                    case '@':
                         if (token == file)
                         {
                             BLT_WARN("Recursive load detected!");
@@ -231,29 +353,42 @@ namespace cs
                             BLT_WARN("Detected in file '%s' offending link '%s'", file.c_str(), token.c_str());
                             break;
                         }
-                        resolvedSite += fetch(token);
-                        break;
-                    }
-                }
-            } else if (lexer.hasTemplatePrefix('$'))
-            {
-                auto token = lexer.consumeToken();
-                if (std::find_if(
-                        m_Context.begin(), m_Context.end(),
-                        [&token](auto in) -> bool {
-                            return token == in.first;
+                        for (const auto& suffix : valid_file_endings)
+                        {
+                            if (token.ends_with(suffix))
+                            {
+                                resolvedSite += fetch(token);
+                                break;
+                            }
                         }
-                ) == m_Context.end())
-                {
-                    // unable to find the token, we should throw an error to tell the user! (or admin in this case)
-                    BLT_WARN("Unable to find token '%s'!", token.c_str());
-                } else
-                    resolvedSite += m_Context[token];
+                        break;
+                    case '$':
+                        if (std::find_if(
+                                m_Context.begin(), m_Context.end(),
+                                [&token](auto in) -> bool {
+                                    return token == in.first;
+                                }
+                        ) == m_Context.end())
+                        {
+                            // unable to find the token, we should throw an error to tell the user! (or admin in this case)
+                            BLT_WARN("Unable to find token '%s'!", token.c_str());
+                        } else
+                            resolvedSite += m_Context[token];
+                        break;
+                    default:
+                        break;
+                }
             } else
                 resolvedSite += lexer.consume();
         }
         
         page.getRawSite() = resolvedSite;
+    }
+    
+    std::string CacheEngine::fetch(const std::string& path, const RuntimeContext& context)
+    {
+        auto fetched = fetch(path);
+        return RuntimeLexer::searchAndReplace(fetched, context);
     }
     
     
