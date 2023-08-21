@@ -19,6 +19,9 @@ namespace cs
         public:
             LexerSyntaxError(): std::runtime_error("Invalid template syntax. EOF occurred before template was fully processed!")
             {}
+            
+            explicit LexerSyntaxError(const std::string& err): std::runtime_error(err)
+            {}
     };
     
     class LexerSearchFailure : public std::runtime_error

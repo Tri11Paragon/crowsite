@@ -107,37 +107,134 @@ namespace cs
             class LogicalEval
             {
                 private:
+                    // stmt -> (stmt) | expr | (expr)
+                    // expr -> ident && ident | ident || ident
+                    // ident -> lit | !lit
                     enum class TokenType
                     {
                         AND,    // &&
                         OR,     // ||
                         NOT,    // !
+                        IDENT,  // literal
                         OPEN,   // (
                         CLOSE   // )
                     };
-                    struct Token {
+                    struct Token
+                    {
                         TokenType type;
                         std::optional<std::string> value;
                     };
-                    std::vector<Token> tokens;
-                    size_t m_index = 0;
-                public:
-                    void processString(const std::string& str)
+                    
+                    static inline bool isSpecial(char c)
                     {
-                        size_t index = 0;
-                        while (index < str.size())
+                        return c == '&' || c == '|' || c == '!' || c == '(' || c == ')' || std::isspace(c);
+                    }
+                    
+                    std::vector<Token> tokens;
+                    size_t t_index = 0;
+                    size_t s_index = 0;
+                    std::string str;
+                    
+                    inline bool hasNextToken()
+                    {
+                        return t_index < tokens.size();
+                    }
+                    
+                    inline Token& peekToken()
+                    {
+                        return tokens[t_index];
+                    }
+                    
+                    inline Token& consumeToken()
+                    {
+                        return tokens[t_index++];
+                    }
+                    
+                    inline bool hasNext()
+                    {
+                        return s_index < str.size();
+                    }
+                    
+                    inline char peek()
+                    {
+                        return str[s_index];
+                    }
+                    
+                    inline char consume()
+                    {
+                        return str[s_index++];
+                    }
+                
+                public:
+                    explicit LogicalEval(std::string str): str(std::move(str))
+                    {
+                        processString();
+                    }
+                    
+                    void processString()
+                    {
+                        while (hasNext())
                         {
-                            char c = str[index++];
-                            if (c == '&' || c == '|'){
-                            
-                            } else if (c == '!') {
-                            
-                            } else if (c == '(') {
-                                tokens.emplace_back(TokenType::OPEN);
-                            } else if (c == ')') {
-                                tokens.emplace_back(TokenType::CLOSE);
+                            char c = consume();
+                            // ignore whitespace
+                            if (isspace(c))
+                                continue;
+                            switch (c)
+                            {
+                                case '&':
+                                    if (consume() != '&')
+                                        throw LexerSyntaxError("Unable to parse logical expression. Found single '&' missing second '&'");
+                                    tokens.emplace_back(TokenType::AND);
+                                    break;
+                                case '|':
+                                    if (consume() != '|')
+                                        throw LexerSyntaxError("Unable to parse logical expression. Found single '|' missing second '|'");
+                                    tokens.emplace_back(TokenType::OR);
+                                    break;
+                                case '!':
+                                    tokens.emplace_back(TokenType::NOT);
+                                    break;
+                                case '(':
+                                    tokens.emplace_back(TokenType::OPEN);
+                                    break;
+                                case ')':
+                                    tokens.emplace_back(TokenType::CLOSE);
+                                    break;
+                                default:
+                                    std::string token;
+                                    while (hasNext() && !isSpecial(peek()))
+                                        token += consume();
+                                    tokens.emplace_back(TokenType::IDENT, token);
+                                    break;
                             }
                         }
+                    }
+                    
+                    static inline bool isEmpty(const std::string& token, const RuntimeContext& context)
+                    {
+                        return !context.contains(token) || context.at(token).empty();
+                    }
+                    
+                    bool factor(const RuntimeContext& context)
+                    {
+                        if (!hasNextToken())
+                            throw LexerSyntaxError("Processing boolean factor but no token was found!");
+                        
+                    }
+                    
+                    bool term(const RuntimeContext& context)
+                    {
+                    
+                    }
+                    
+                    bool expr(const RuntimeContext& context)
+                    {
+                    
+                    }
+                    
+                    bool eval(const RuntimeContext& context)
+                    {
+                    
                     }
             };
         
