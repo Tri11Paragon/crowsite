@@ -3,3 +3,5 @@ cmake-build-debug-address/
 cmake-build-minsizerel/
 cmake-build-release/
 cmake-build-relwithdebinfo/
+cmake-build-relwithdebaddr/
+crow_test/data/

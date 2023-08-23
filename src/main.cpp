@@ -99,6 +99,36 @@ bool isUserAdmin(CrowApp& app, const crow::request& req)
     return cs::isUserAdmin(cs::getUserFromID(s_clientID));
 }
 
+void generateRuntimeContext(const site_params& params, cs::RuntimeContext& context){
+    auto& session = params.app.get_context<Session>(params.req);
+    auto s_clientID = session.get("clientID", "");
+    auto s_clientToken = session.get("clientToken", "");
+    if (cs::isUserLoggedIn(s_clientID, s_clientToken))
+    {
+        auto username = cs::getUserFromID(s_clientID);
+        auto perms = cs::getUserPermissions(username);
+        auto isAdmin = cs::isUserAdmin(username);
+        context["_logged_in"] = "True";
+        context["_username"] = username;
+        if (isAdmin)
+            context["_admin"] = "True";
+        if (perms & cs::PERM_READ_FILES)
+            context["_read_files"] = "True";
+        if (perms & cs::PERM_WRITE_FILES)
+            context["_write_files"] = "True";
+        if (perms & cs::PERM_CREATE_POSTS)
+            context["_create_posts"] = "True";
+        if (perms & cs::PERM_CREATE_COMMENTS)
+            context["_create_comments"] = "True";
+        if (perms & cs::PERM_CREATE_SHARES)
+            context["_create_shares"] = "True";
+        if (perms & cs::PERM_EDIT_POSTS)
+            context["_edit_posts"] = "True";
+        if (perms & cs::PERM_EDIT_COMMENTS)
+            context["_edit_comments"] = "True";
+    }
+}
+
 crow::response handle_root_page(const site_params& params)
 {
     //auto page = crow::mustache::load("index.html"); //
@@ -120,6 +150,7 @@ crow::response handle_root_page(const site_params& params)
         auto user_perms = cs::getUserPermissions(cs::getUserFromID(s_clientID));
         
         crow::mustache::context ctx;
+        cs::RuntimeContext context;
         
         // pass perms in
         if (user_perms & cs::PERM_ADMIN)
@@ -136,7 +167,7 @@ crow::response handle_root_page(const site_params& params)
         auto referer = params.req.url_params.get("referer");
         if (referer)
             ctx["referer"] = referer;
-        auto page = crow::mustache::compile(params.engine.fetch(params.name));
+        auto page = crow::mustache::compile(params.engine.fetch(params.name, context));
         return page.render(ctx);
     }
     
@@ -163,7 +194,7 @@ int main(int argc, const char** argv)
     blt::arg_parse parser;
     parser.addArgument(blt::arg_builder("--tests").setAction(blt::arg_action_t::STORE_TRUE).build());
     parser.addArgument(blt::arg_builder({"--port", "-p"}).setDefault(8080).build());
-    parser.addArgument(blt::arg_builder("token").build());
+    parser.addArgument(blt::arg_builder("token").setRequired().build());
     auto args = parser.parse_args(argc, argv);
     cs::jellyfin::setToken(blt::arg_parse::get<std::string>(args["token"]));
     cs::jellyfin::processUserData();

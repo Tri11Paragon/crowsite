@@ -51,7 +51,7 @@ namespace cs::jellyfin
     
     std::string getUserData()
     {
-#define url "https://media.tpgc.me/Users"
+        const auto url = "https://media.tpgc.me/Users";
         
         cs::request request;
         request.setContentHeaderJson();

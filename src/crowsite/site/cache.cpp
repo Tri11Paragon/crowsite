@@ -119,6 +119,24 @@ namespace cs
                         OPEN,   // (
                         CLOSE   // )
                     };
+                    
+                    static std::string decodeName(TokenType type){
+                        switch (type){
+                            case TokenType::AND:
+                                return "AND";
+                            case TokenType::OR:
+                                return "OR";
+                            case TokenType::NOT:
+                                return "NOT";
+                            case TokenType::IDENT:
+                                return "IDENT";
+                            case TokenType::OPEN:
+                                return "OPEN";
+                            case TokenType::CLOSE:
+                                return "CLOSE";
+                        }
+                    }
+                    
                     struct Token
                     {
                         TokenType type;
@@ -164,12 +182,6 @@ namespace cs
                     {
                         return str[s_index++];
                     }
-                
-                public:
-                    explicit LogicalEval(std::string str): str(std::move(str))
-                    {
-                        processString();
-                    }
                     
                     void processString()
                     {
@@ -202,6 +214,7 @@ namespace cs
                                     break;
                                 default:
                                     std::string token;
+                                    token += c;
                                     while (hasNext() && !isSpecial(peek()))
                                         token += consume();
                                     tokens.emplace_back(TokenType::IDENT, token);
@@ -210,31 +223,63 @@ namespace cs
                         }
                     }
                     
-                    static inline bool isEmpty(const std::string& token, const RuntimeContext& context)
+                    static inline bool isTrue(const RuntimeContext& context, const std::string& token)
                     {
-                        return !context.contains(token) || context.at(token).empty();
+                        BLT_DEBUG("isTrue for token '%s' contains? %s", token.c_str(), context.contains(token) ? "True" : "False");
+                        return context.contains(token) && !context.at(token).empty();
                     }
                     // http://www.cs.unb.ca/~wdu/cs4613/a2ans.htm
                     bool factor(const RuntimeContext& context)
                     {
                         if (!hasNextToken())
                             throw LexerSyntaxError("Processing boolean factor but no token was found!");
-                        
-                    }
-                    
-                    bool term(const RuntimeContext& context)
-                    {
-                    
+                        auto next = consumeToken();
+                        switch (next.type){
+                            case TokenType::IDENT:
+                                if (!next.value.has_value())
+                                    throw LexerSyntaxError("Token identifier does not have a value!");
+                                return isTrue(context, next.value.value());
+                            case TokenType::NOT:
+                                return !factor(context);
+                            case TokenType::OPEN:
+                            {
+//                                auto ret = ;
+//                                if (consume() != ')')
+//                                    throw LexerSyntaxError("Found token '(', parsed expression, but not ')' was found!");
+                                return expr(context);
+                            }
+                            default:
+                                throw LexerSyntaxError("Weird token found while parsing tokens, type: " + decodeName(next.type));
+                        }
                     }
                     
                     bool expr(const RuntimeContext& context)
                     {
-                    
+                        auto fac = factor(context);
+                        if (!hasNextToken())
+                            return fac;
+                        auto next = consumeToken();
+                        switch (next.type) {
+                            case TokenType::AND:
+                                return fac && expr(context);
+                            case TokenType::OR:
+                                return fac || expr(context);
+                            case TokenType::CLOSE:
+                            default:
+                                //BLT_WARN("I've reached the default, help! %s", decodeName(next.type).c_str());
+                                return fac;
+                        }
+                    }
+                
+                public:
+                    explicit LogicalEval(std::string str): str(std::move(str))
+                    {
+                        processString();
                     }
                     
                     bool eval(const RuntimeContext& context)
                     {
-                    
+                        return expr(context);
                     }
             };
         
@@ -286,7 +331,7 @@ namespace cs
                         auto searchField = lexer.str.substr(lexer.index);
                         auto endTokenLoc = RuntimeLexer::findLastTagLocation(token, searchField);
                         
-                        auto
+                        
                     } else
                         results += lexer.consume();
                 }
