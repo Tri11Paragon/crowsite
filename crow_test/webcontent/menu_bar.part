@@ -4,12 +4,11 @@
     <li class="left"><a id="research" href="/research.html">Research</a></li>
     <li class="left"><a id="git" href="/git.html">Git</a></li>
     <li class="left"><a id='about' href="/about.html">About</a></li>
-    {{#_logged_in}}
+    {{%_logged_in}}
         <li class="right"><a href="/logout.html">Logout</a></li>
-    {{/_logged_in}}
-    {{#_not_logged_in}}
+    {{*_logged_in}}
         <li class="right"><a id='login' href="/login.html">Login</a></li>
-    {{/_not_logged_in}}
+    {{/_logged_in}}
 </ul> 
 <script>
     const path = window.location.pathname;

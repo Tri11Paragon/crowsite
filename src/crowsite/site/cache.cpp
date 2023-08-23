@@ -66,7 +66,7 @@ namespace cs
                 while (!hasTemplateSuffix())
                 {
                     if (!hasNext())
-                        blt_throw(LexerSyntaxError());
+                    blt_throw(LexerSyntaxError());
                     token += consume();
                 }
                 consumeTemplateSuffix();
@@ -119,8 +119,10 @@ namespace cs
                         CLOSE   // )
                     };
                     
-                    static std::string decodeName(TokenType type){
-                        switch (type){
+                    static std::string decodeName(TokenType type)
+                    {
+                        switch (type)
+                        {
                             case TokenType::AND:
                                 return "AND";
                             case TokenType::OR:
@@ -194,12 +196,12 @@ namespace cs
                             {
                                 case '&':
                                     if (consume() != '&')
-                                        blt_throw(LexerSyntaxError("Unable to parse logical expression. Found single '&' missing second '&'"));
+                                    blt_throw(LexerSyntaxError("Unable to parse logical expression. Found single '&' missing second '&'"));
                                     tokens.emplace_back(TokenType::AND);
                                     break;
                                 case '|':
                                     if (consume() != '|')
-                                        blt_throw(LexerSyntaxError("Unable to parse logical expression. Found single '|' missing second '|'"));
+                                    blt_throw(LexerSyntaxError("Unable to parse logical expression. Found single '|' missing second '|'"));
                                     tokens.emplace_back(TokenType::OR);
                                     break;
                                 case '!':
@@ -227,16 +229,18 @@ namespace cs
                         //BLT_DEBUG("isTrue for token '%s' contains? %s", token.c_str(), context.contains(token) ? "True" : "False");
                         return context.contains(token) && !context.at(token).empty();
                     }
+                    
                     // http://www.cs.unb.ca/~wdu/cs4613/a2ans.htm
                     bool factor(const RuntimeContext& context)
                     {
                         if (!hasNextToken())
-                            blt_throw(LexerSyntaxError("Processing boolean factor but no token was found!"));
+                        blt_throw(LexerSyntaxError("Processing boolean factor but no token was found!"));
                         auto next = consumeToken();
-                        switch (next.type){
+                        switch (next.type)
+                        {
                             case TokenType::IDENT:
                                 if (!next.value.has_value())
-                                    blt_throw(LexerSyntaxError("Token identifier does not have a value!"));
+                                blt_throw(LexerSyntaxError("Token identifier does not have a value!"));
                                 return isTrue(context, next.value.value());
                             case TokenType::NOT:
                                 return !factor(context);
@@ -248,7 +252,7 @@ namespace cs
                                 return expr(context);
                             }
                             default:
-                                blt_throw(LexerSyntaxError("Weird token found while parsing tokens, type: " + decodeName(next.type)));
+                            blt_throw(LexerSyntaxError("Weird token found while parsing tokens, type: " + decodeName(next.type)));
                         }
                     }
                     
@@ -258,7 +262,8 @@ namespace cs
                         if (!hasNextToken())
                             return fac;
                         auto next = consumeToken();
-                        switch (next.type) {
+                        switch (next.type)
+                        {
                             case TokenType::AND:
                                 return fac && expr(context);
                             case TokenType::OR:
@@ -298,11 +303,12 @@ namespace cs
             
             }
             
-            static void getTagLocations(std::vector<size_t>& tagLocations, const std::string& tag, const std::string& data){
+            static void getTagLocations(std::vector<size_t>& tagLocations, const std::string& tag, const std::string& data)
+            {
                 RuntimeLexer lexer(data);
                 while (lexer.hasNext())
                 {
-                    if (lexer.hasTemplatePrefix('/'))
+                    if (lexer.hasTemplatePrefix('/') || lexer.hasTemplatePrefix('*'))
                     {
                         auto loc = lexer.index;
                         auto token = lexer.consumeToken();
@@ -312,7 +318,7 @@ namespace cs
                         lexer.consume();
                 }
                 if (tagLocations.empty())
-                blt_throw( LexerSearchFailure(tag));
+                blt_throw(LexerSearchFailure(tag));
             }
             
             static size_t findLastTagLocation(const std::string& tag, const std::string& data)
@@ -322,7 +328,8 @@ namespace cs
                 return tagLocations[tagLocations.size() - 1];
             }
             
-            static size_t findNextTagLocation(const std::string& tag, const std::string& data) {
+            static size_t findNextTagLocation(const std::string& tag, const std::string& data)
+            {
                 std::vector<size_t> tagLocations{};
                 getTagLocations(tagLocations, tag, data);
                 return tagLocations[0];
@@ -342,18 +349,32 @@ namespace cs
                         auto internalData = searchField.substr(0, endTokenLoc);
                         
                         LogicalEval eval(token);
+                        bool expressionValue = eval.eval(context);
                         
-                        if (eval.eval(context)) {
+                        if (expressionValue)
+                        {
                             results += searchAndReplace(internalData, context);
                         }
                         
                         lexer.index += endTokenLoc;
+                        if (lexer.hasTemplatePrefix('*'))
+                        {
+                            lexer.consumeToken();
+                            auto nextSearchField = lexer.str.substr(lexer.index);
+                            auto nextEndLoc = RuntimeLexer::findNextTagLocation(token, nextSearchField);
+                            auto nextInternalData = nextSearchField.substr(0, nextEndLoc);
+                            
+                            if (!expressionValue)
+                            {
+                                results += searchAndReplace(nextInternalData, context);
+                            }
+                            lexer.index += nextEndLoc;
+                        }
                         if (lexer.hasTemplatePrefix('/'))
                             lexer.consumeToken();
-                        else {
+                        else
                             blt_throw(LexerSyntaxError("Ending token not found!"));
-                        }
-
+                        
                     } else
                         results += lexer.consume();
                 }
@@ -479,8 +500,9 @@ namespace cs
         while (prunedAmount < amount)
         {
             auto page = cachedPages[0];
-            BLT_TRACE("Pruning page (%d bytes) aged %f seconds", page.memoryUsage,
-                      toSeconds(blt::system::getCurrentTimeNanoseconds() - m_Pages[page.key].cacheTime));
+            BLT_TRACE(
+                    "Pruning page (%d bytes) aged %f seconds", page.memoryUsage,
+                    toSeconds(blt::system::getCurrentTimeNanoseconds() - m_Pages[page.key].cacheTime));
             prunedAmount += page.memoryUsage;
             m_Pages.erase(page.key);
             prunedPages++;
