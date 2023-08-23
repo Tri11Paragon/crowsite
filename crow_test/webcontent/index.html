@@ -18,8 +18,16 @@
 
             <div class="center">
               HAXsdsad
-              {{#_admin}}
-                Admin detected
+              {{%_admin}}
+                <p>Admin detected</p>
+              {{/_admin}}
+              {{%_admin && _create_posts}}
+                <p>Admin and can read!</p>
+              {{/_admin && _create_posts}}
+              {{%_admin}}
+                {{%_read_files}}
+                  Nested time!
+                {{/_read_files}}
               {{/_admin}}
             </div>
         </div>

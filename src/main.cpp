@@ -10,6 +10,7 @@
 #include <crowsite/site/auth.h>
 #include <crow/middlewares/session.h>
 #include <crow/middlewares/cookie_parser.h>
+#include "blt/std/assert.h"
 
 using Session = crow::SessionMiddleware<crow::FileStore>;
 using CrowApp = crow::App<crow::CookieParser, Session>;
@@ -152,6 +153,8 @@ crow::response handle_root_page(const site_params& params)
         crow::mustache::context ctx;
         cs::RuntimeContext context;
         
+        generateRuntimeContext(params, context);
+        
         // pass perms in
         if (user_perms & cs::PERM_ADMIN)
             ctx["_admin"] = true;
@@ -189,6 +192,7 @@ int main(int argc, const char** argv)
     blt::logging::setLogOutputFormat(
             "\033[94m[${{FULL_TIME}}]${{RC}} ${{LF}}[${{LOG_LEVEL}}]${{RC}} \033[35m(${{FILE}}:${{LINE}})${{RC}} ${{CNR}}${{STR}}${{RC}}\n"
     );
+    
     cs::requests::init();
     
     blt::arg_parse parser;

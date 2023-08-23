@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <blt/std/time.h>
 #include <optional>
+#include <blt/std/assert.h>
 
 namespace cs
 {
@@ -65,9 +66,7 @@ namespace cs
                 while (!hasTemplateSuffix())
                 {
                     if (!hasNext())
-                    {
-                        throw LexerSyntaxError();
-                    }
+                        blt_throw(LexerSyntaxError());
                     token += consume();
                 }
                 consumeTemplateSuffix();
@@ -195,12 +194,12 @@ namespace cs
                             {
                                 case '&':
                                     if (consume() != '&')
-                                        throw LexerSyntaxError("Unable to parse logical expression. Found single '&' missing second '&'");
+                                        blt_throw(LexerSyntaxError("Unable to parse logical expression. Found single '&' missing second '&'"));
                                     tokens.emplace_back(TokenType::AND);
                                     break;
                                 case '|':
                                     if (consume() != '|')
-                                        throw LexerSyntaxError("Unable to parse logical expression. Found single '|' missing second '|'");
+                                        blt_throw(LexerSyntaxError("Unable to parse logical expression. Found single '|' missing second '|'"));
                                     tokens.emplace_back(TokenType::OR);
                                     break;
                                 case '!':
@@ -225,19 +224,19 @@ namespace cs
                     
                     static inline bool isTrue(const RuntimeContext& context, const std::string& token)
                     {
-                        BLT_DEBUG("isTrue for token '%s' contains? %s", token.c_str(), context.contains(token) ? "True" : "False");
+                        //BLT_DEBUG("isTrue for token '%s' contains? %s", token.c_str(), context.contains(token) ? "True" : "False");
                         return context.contains(token) && !context.at(token).empty();
                     }
                     // http://www.cs.unb.ca/~wdu/cs4613/a2ans.htm
                     bool factor(const RuntimeContext& context)
                     {
                         if (!hasNextToken())
-                            throw LexerSyntaxError("Processing boolean factor but no token was found!");
+                            blt_throw(LexerSyntaxError("Processing boolean factor but no token was found!"));
                         auto next = consumeToken();
                         switch (next.type){
                             case TokenType::IDENT:
                                 if (!next.value.has_value())
-                                    throw LexerSyntaxError("Token identifier does not have a value!");
+                                    blt_throw(LexerSyntaxError("Token identifier does not have a value!"));
                                 return isTrue(context, next.value.value());
                             case TokenType::NOT:
                                 return !factor(context);
@@ -245,11 +244,11 @@ namespace cs
                             {
 //                                auto ret = ;
 //                                if (consume() != ')')
-//                                    throw LexerSyntaxError("Found token '(', parsed expression, but not ')' was found!");
+//                                    blt_throw( LexerSyntaxError("Found token '(', parsed expression, but not ')' was found!");
                                 return expr(context);
                             }
                             default:
-                                throw LexerSyntaxError("Weird token found while parsing tokens, type: " + decodeName(next.type));
+                                blt_throw(LexerSyntaxError("Weird token found while parsing tokens, type: " + decodeName(next.type)));
                         }
                     }
                     
@@ -299,9 +298,7 @@ namespace cs
             
             }
             
-            static size_t findLastTagLocation(const std::string& tag, const std::string& data)
-            {
-                std::vector<size_t> tagLocations{};
+            static void getTagLocations(std::vector<size_t>& tagLocations, const std::string& tag, const std::string& data){
                 RuntimeLexer lexer(data);
                 while (lexer.hasNext())
                 {
@@ -315,8 +312,20 @@ namespace cs
                         lexer.consume();
                 }
                 if (tagLocations.empty())
-                    throw LexerSearchFailure(tag);
+                blt_throw( LexerSearchFailure(tag));
+            }
+            
+            static size_t findLastTagLocation(const std::string& tag, const std::string& data)
+            {
+                std::vector<size_t> tagLocations{};
+                getTagLocations(tagLocations, tag, data);
                 return tagLocations[tagLocations.size() - 1];
+            }
+            
+            static size_t findNextTagLocation(const std::string& tag, const std::string& data) {
+                std::vector<size_t> tagLocations{};
+                getTagLocations(tagLocations, tag, data);
+                return tagLocations[0];
             }
             
             static std::string searchAndReplace(const std::string& data, const RuntimeContext& context)
@@ -329,9 +338,22 @@ namespace cs
                     {
                         auto token = lexer.consumeToken();
                         auto searchField = lexer.str.substr(lexer.index);
-                        auto endTokenLoc = RuntimeLexer::findLastTagLocation(token, searchField);
+                        auto endTokenLoc = RuntimeLexer::findNextTagLocation(token, searchField);
+                        auto internalData = searchField.substr(0, endTokenLoc);
                         
+                        LogicalEval eval(token);
                         
+                        if (eval.eval(context)) {
+                            results += searchAndReplace(internalData, context);
+                        }
+                        
+                        lexer.index += endTokenLoc;
+                        if (lexer.hasTemplatePrefix('/'))
+                            lexer.consumeToken();
+                        else {
+                            blt_throw(LexerSyntaxError("Ending token not found!"));
+                        }
+
                     } else
                         results += lexer.consume();
                 }
