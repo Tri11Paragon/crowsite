@@ -127,7 +127,7 @@ namespace cs
                     return false;
                 }
                 insertAuth.set(username, 0);
-                insertAuth.set(PERM_DEFAULT | (jellyfin::getUserData(username).isAdmin ? PERM_ADMIN : 0), 1);
+                insertAuth.set((jellyfin::getUserData(username).isAdmin ? PERM_ADMIN : 0), 1);
                 
                 if (!insertAuth.execute())
                 {
@@ -184,7 +184,7 @@ namespace cs
         if (stmt.fail())
             return 0;
         stmt.set(username, 0);
-        return static_cast<uint32_t>(stmt.executeAndGet<int32_t>(0));
+        return static_cast<uint32_t>(stmt.executeAndGet<int32_t>(0)) | cs::PERM_DEFAULT;
     }
     
     void auth::init()

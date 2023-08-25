@@ -1,3 +1,6 @@
 [submodule "libs/BLT"]
 	path = libs/BLT
 	url = https://github.com/Tri11Paragon/blt.git
+[submodule "libs/crow"]
+	path = libs/crow
+	url = https://github.com/CrowCpp/Crow

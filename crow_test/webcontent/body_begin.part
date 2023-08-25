@@ -1,0 +1,4 @@
+<body class="blur-bgimage" style="background-image: url({{$SITE_BACKGROUND}})">
+    <div class="center">
+        <div class="container">
+          {{@menu_bar.part}}

@@ -10,7 +10,7 @@
 #include <crowsite/site/auth.h>
 #include <crow/middlewares/session.h>
 #include <crow/middlewares/cookie_parser.h>
-#include "blt/std/assert.h"
+#include <crowsite/site/projects.h>
 
 using Session = crow::SessionMiddleware<crow::FileStore>;
 using CrowApp = crow::App<crow::CookieParser, Session>;
@@ -231,6 +231,9 @@ int main(int argc, const char** argv)
     context["SITE_VERSION"] = SITE_VERSION;
     context["BEE_MOVIE"] = beemovie_script;
     context["SITE_BACKGROUND"] = "/static/images/backgrounds/2023-05-26_23.18.23.png";
+    context["MENU_BAR_COLOR"] = "#335";
+    context["MENU_BAR_HOVER"] = "#223";
+    context["MENU_BAR_ACTIVE"] = "#7821be";
     
     BLT_INFO("Starting cache engine");
     
@@ -304,6 +307,28 @@ int main(int argc, const char** argv)
                     return cs::redirect(pp.hasKey("referer") ? pp["referer"] : "/");
                 } else
                     return cs::redirect("login.html");
+            }
+    );
+    
+    CROW_ROUTE(app, "/projects/<path>")(
+            [&engine, &app](const crow::request& req, const std::string& path) {
+                checkAndUpdateUserSession(app, req);
+                auto& session = app.get_context<Session>(req);
+                auto s_clientID = session.get("clientID", "");
+                auto s_clientToken = session.get("clientToken", "");
+                
+                return cs::handleProjectPage({engine, req, s_clientID, s_clientToken, path});
+            }
+    );
+    
+    CROW_ROUTE(app, "/projects/")(
+            [&engine, &app](const crow::request& req) {
+                checkAndUpdateUserSession(app, req);
+                auto& session = app.get_context<Session>(req);
+                auto s_clientID = session.get("clientID", "");
+                auto s_clientToken = session.get("clientToken", "");
+                
+                return cs::handleProjectPage({engine, req, s_clientID, s_clientToken, "index.html"});
             }
     );
     

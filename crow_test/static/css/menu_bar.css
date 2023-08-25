@@ -3,7 +3,7 @@ ul.menu_bar {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: {{$MENU_BAR_COLOR}};
 }
 
 ul.menu_bar li.left {
@@ -25,10 +25,10 @@ ul.menu_bar li a {
 }
 
 ul.menu_bar li a.active {
-    background-color: #04AA6D;
+    background-color: {{$MENU_BAR_ACTIVE}};
 }
 
 /* Change the link color to #111 (black) on hover */
 ul.menu_bar li a:hover {
-    background-color: #111;
+    background-color: {{$MENU_BAR_HOVER}};
 }

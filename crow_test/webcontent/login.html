@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="/static/css/home.css">
-    <link rel="stylesheet" href="/static/css/bar.css">
-    <link rel="stylesheet" href="/static/css/menu_bar.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <style>
+      {{@../static/css/menu_bar.css}}
+      {{@../static/css/body.css}}
+    </style>
     <meta charset="UTF-8">
-    <meta name="description" content="Login to {{$SITE_NAME}}">
-    <meta name="keywords" content="{{$SITE_NAME}}">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
     <meta name="author" content="Brett">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{$SITE_TITLE}}</title>
   </head>
-  <body class="blur-bgimage" style="background-image: url({{$SITE_BACKGROUND}})">
-    <div class="center">
-        <div class="body">
-            {{@menu_bar.part}}
-
-            <div class="center">
-              <form action="/res/login" method="post">
-                  <label for="username">Username</label><br>
-                  <input type="text" id="username" name="username"><br>
-                  <label for="password">Password</label><br>
-                  <input type="password" id="password" name="password"><br>
-                  <label for="remember_me">Remember Me?</label><br>
-                  <input type="checkbox" id="remember_me" value="T" name="remember_me"><br>
-                  <input type="submit" value="Login">
-              </form>
+  {{@body_begin.part}}
+    <div class="body">
+        <div class="center">
+          <div class="center">
+            <form action="/res/login" method="post">
+                <label for="username">Username</label><br>
+                <input type="text" id="username" name="username"><br>
+                <label for="password">Password</label><br>
+                <input type="password" id="password" name="password"><br>
+                <label for="remember_me">Remember Me?</label><br>
+                <input type="checkbox" id="remember_me" value="T" name="remember_me"><br>
+                <input type="submit" value="Login">
+            </form>
           </div>
         </div>
     </div>
-  </body>
+  {{@body_end.part}}
 </html>
