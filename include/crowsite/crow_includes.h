@@ -6,7 +6,6 @@
 #define CROWSITE_CROW_INCLUDES_H
 
 #include <crowsite/config.h>
-#define CROW_ENABLE_COMPRESSION
 #include "crow.h"
 
 #endif //CROWSITE_CROW_INCLUDES_H

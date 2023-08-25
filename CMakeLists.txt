@@ -11,6 +11,9 @@ set(CROW_FEATURES compression)
 cmake_policy(SET CMP0057 NEW)
 #find_package(Crow)
 
+set(CROW_BUILD_TESTS OFF)
+set(CROW_BUILD_EXAMPLES OFF)
+set(CROW_INSTALL OFF)
 add_subdirectory(libs/crow)
 
 find_package(CURL)
@@ -38,6 +41,8 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 file(GLOB_RECURSE source_files src/*.cpp)
 
 add_executable(crowsite ${source_files})
+
+target_compile_definitions(crowsite PUBLIC CROW_ENABLE_COMPRESSION)
 
 target_link_libraries(crowsite BLT)
 target_link_libraries(crowsite Crow::Crow)
