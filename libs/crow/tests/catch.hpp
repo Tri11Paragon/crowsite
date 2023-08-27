@@ -8476,16 +8476,16 @@ namespace clara {
 namespace TextFlow {
 
 inline auto isWhitespace(char c) -> bool {
-	static std::string chars = " \t\n\r";
-	return chars.find(c) != std::string::npos;
+	static std::string buffer = " \t\n\r";
+	return buffer.find(c) != std::string::npos;
 }
 inline auto isBreakableBefore(char c) -> bool {
-	static std::string chars = "[({<|";
-	return chars.find(c) != std::string::npos;
+	static std::string buffer = "[({<|";
+	return buffer.find(c) != std::string::npos;
 }
 inline auto isBreakableAfter(char c) -> bool {
-	static std::string chars = "])}>.,:;*+-=&/\\";
-	return chars.find(c) != std::string::npos;
+	static std::string buffer = "])}>.,:;*+-=&/\\";
+	return buffer.find(c) != std::string::npos;
 }
 
 class Columns;

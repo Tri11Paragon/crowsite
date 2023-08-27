@@ -414,6 +414,7 @@ namespace crow
             }
             if (close_connection_)
             {
+                std::cout << "closing connection!\n";
                 adaptor_.shutdown_readwrite();
                 adaptor_.close();
                 CROW_LOG_DEBUG << this << " from write (static)";
@@ -552,7 +553,6 @@ namespace crow
 
         inline void do_write_sync(std::vector<asio::const_buffer>& buffers)
         {
-
             asio::write(adaptor_.socket(), buffers, [&](asio::error_code ec, std::size_t) {
                 if (!ec)
                 {

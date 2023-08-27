@@ -10,7 +10,8 @@
 #include <crowsite/site/auth.h>
 #include <crow/middlewares/session.h>
 #include <crow/middlewares/cookie_parser.h>
-#include <crowsite/site/projects.h>
+#include <crowsite/site/posts.h>
+#include <crowsite/util/memory_reader.h>
 
 using Session = crow::SessionMiddleware<crow::FileStore>;
 using CrowApp = crow::App<crow::CookieParser, Session>;
@@ -20,7 +21,7 @@ class BLT_CrowLogger : public crow::ILogHandler
     public:
         void log(std::string message, crow::LogLevel crow_level) final
         {
-            blt::logging::log_level blt_level;
+            blt::logging::log_level blt_level = blt::logging::log_level::NONE;
             switch (crow_level)
             {
                 case crow::LogLevel::DEBUG:
@@ -100,7 +101,8 @@ bool isUserAdmin(CrowApp& app, const crow::request& req)
     return cs::isUserAdmin(cs::getUserFromID(s_clientID));
 }
 
-void generateRuntimeContext(const site_params& params, cs::RuntimeContext& context){
+void generateRuntimeContext(const site_params& params, cs::RuntimeContext& context)
+{
     auto& session = params.app.get_context<Session>(params.req);
     auto s_clientID = session.get("clientID", "");
     auto s_clientToken = session.get("clientToken", "");
@@ -162,7 +164,8 @@ crow::response handle_root_page(const site_params& params)
         if (cs::isUserLoggedIn(s_clientID, s_clientToken))
         {
             ctx["_logged_in"] = true;
-        } else {
+        } else
+        {
             ctx["_not_logged_in"] = true;
         }
         
@@ -181,7 +184,6 @@ crow::response handle_auth_page(const site_params& params)
 {
     if (isUserAdmin(params.app, params.req))
         return cs::redirect("/login.html");
-    
     
     
     return handle_root_page(params);

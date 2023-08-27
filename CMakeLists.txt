@@ -33,6 +33,9 @@ else ()
 endif ()
 
 add_subdirectory(libs/BLT)
+
+add_subdirectory(libs/md4c)
+
 include_directories(include/)
 include_directories(${CURL_INCLUDE_DIRS})
 include_directories(${SQLite3_INCLUDE_DIRS})
@@ -49,6 +52,8 @@ target_link_libraries(crowsite Crow::Crow)
 target_link_libraries(crowsite ${CURL_LIBRARIES})
 target_link_libraries(crowsite OpenSSL::SSL OpenSSL::Crypto)
 target_link_libraries(crowsite SQLite::SQLite3)
+target_link_libraries(crowsite md4c-html md4c)
+target_include_directories(crowsite PRIVATE libs/md4c/src)
 target_compile_options(crowsite PRIVATE -Wall -Wextra -Wpedantic)
 
 if (${ENABLE_ADDRSAN} MATCHES ON)

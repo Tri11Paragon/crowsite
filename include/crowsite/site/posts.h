@@ -5,8 +5,8 @@
  * See LICENSE file for license detail
  */
 
-#ifndef CROWSITE_PROJECTS_H
-#define CROWSITE_PROJECTS_H
+#ifndef CROWSITE_POSTS_H
+#define CROWSITE_POSTS_H
 
 #include <crowsite/site/cache.h>
 #include <crow/http_request.h>
@@ -26,4 +26,4 @@ namespace cs
 
 }
 
-#endif //CROWSITE_PROJECTS_H
+#endif //CROWSITE_POSTS_H

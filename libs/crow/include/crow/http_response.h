@@ -20,6 +20,7 @@
 #include "crow/logging.h"
 #include "crow/mime_types.h"
 #include "crow/returnable.h"
+#include <blt/std/filesystem.h>
 
 
 namespace crow
@@ -202,7 +203,7 @@ namespace crow
         /// Check whether the response has a static file defined.
         inline bool is_static_type()
         {
-            return file_info.path.size();
+            return !file_info.path.empty() || file_info.reader != nullptr;
         }
 
         /// This constains metadata (coming from the `stat` command) related to any static files associated with this response.
@@ -214,11 +215,21 @@ namespace crow
             std::string path = "";
             struct stat statbuf;
             int statResult;
-            std::ifstream* reader = nullptr;
+            blt::fs::block_reader* reader = nullptr;
         };
 
         /// Return a static file as the response body
         void set_static_file_info(std::string path);
+        
+        void set_static_file_reader(blt::fs::block_reader* reader, size_t total_size)
+        {
+            compressed = false;
+            code = 200;
+            file_info.reader = reader;
+            file_info.statbuf.st_size = static_cast<long>(total_size);
+            this->add_header("Content-Length", std::to_string(total_size));
+            this->add_header("Content-Type", "application/octet-stream");
+        }
 
         /// Return a static file as the response body without sanitizing the path (use set_static_file_info instead)
         void set_static_file_info_unsafe(std::string path);

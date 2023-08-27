@@ -76,6 +76,18 @@ namespace cs
                 throw std::runtime_error("Unable to create file path because file does not exist!");
             return path;
         }
+        
+        std::string createDataFilePath(const std::string& file)
+        {
+            auto path = std::string(SITE_FILES_PATH);
+            if (!path.ends_with('/'))
+                path += '/';
+            path += "data/";
+            path += file;
+            if (!std::filesystem::exists(path))
+                throw std::runtime_error("Unable to create file path because file does not exist!");
+            return path;
+        }
     }
     
 }

@@ -1,7 +1,7 @@
 <ul class="menu_bar">
     <li class="left"><a id="home" href="/">Home</a></li>
+    <li class="left"><a id="blog" href="/blog/">Blog</a></li>
     <li class="left"><a id="projects" href="/projects/">Projects</a></li>
-    <li class="left"><a id="research" href="/research/">Research</a></li>
     <li class="left"><a id="git" href="/git.html">Git</a></li>
     <li class="left"><a id='about' href="/about.html">About</a></li>
     {{%_logged_in}}
@@ -18,8 +18,10 @@
     const ids = {
         "/": "home",
         "/index.html": "home",
-        "/projects.html": "projects",
-        "/research.html": "research",
+        "/projects/": "projects",
+        "/projects/index.html": "projects",
+        "/blog/": "blog",
+        "/blog/index.html": "blog",
         "/git.html": "git",
         "/about.html": "about",
         "/login.html": "login"

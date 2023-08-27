@@ -30,6 +30,7 @@ namespace cs {
         
         std::string createStaticFilePath(const std::string& file);
         std::string createWebFilePath(const std::string& file);
+        std::string createDataFilePath(const std::string& file);
         
     }
     

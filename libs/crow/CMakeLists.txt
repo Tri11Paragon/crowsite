@@ -55,6 +55,13 @@ target_include_directories(Crow
 		$<INSTALL_INTERFACE:include>
 )
 
+#file(GLOB_RECURSE Crow_Header_Files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} include/*.h)
+##message("Headers: ${Crow_Header_Files}")
+#target_precompile_headers(Crow
+#		INTERFACE
+#		$<BUILD_INTERFACE:${Crow_Header_Files}>
+#)
+
 file(GLOB_RECURSE Crow_Source_Files ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 target_sources(Crow INTERFACE ${Crow_Source_Files})
 
