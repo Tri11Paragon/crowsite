@@ -8,27 +8,10 @@
 #include <memory>
 #include <string>
 #include <crowsite/config.h>
+#include <crowsite/util/crow_typedef.h>
 #include <utility>
 
 namespace cs {
-    
-    class StaticContext {
-        private:
-            HASHMAP<std::string, std::string> replacements;
-        public:
-            inline auto begin() {
-                return replacements.begin();
-            }
-            inline auto end() {
-                return replacements.end();
-            }
-            inline std::string& operator[](const std::string& key){
-                return replacements[key];
-            }
-            inline void add(const std::string& key, const std::string& value){
-                replacements[key] = value;
-            }
-    };
     
     class HTMLPage {
         private:

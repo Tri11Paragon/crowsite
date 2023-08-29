@@ -6,13 +6,12 @@
 #define CROWSITE_CACHE_H
 
 #include <crowsite/site/web.h>
+#include <crowsite/util/crow_typedef.h>
 #include <filesystem>
 #include <blt/std/hashmap.h>
 
 namespace cs
 {
-    
-    using RuntimeContext = HASHMAP<std::string, std::string>;
     
     class LexerSyntaxError : public std::runtime_error
     {
@@ -54,7 +53,7 @@ namespace cs
                 std::string renderedPage;
             };
             
-            StaticContext& m_Context;
+            context& m_Context;
             CacheSettings m_Settings;
             HASHMAP<std::string, CacheValue> m_Pages;
             
@@ -75,11 +74,11 @@ namespace cs
             void prune(uint64_t amount);
         
         public:
-            explicit CacheEngine(StaticContext& context, const CacheSettings& settings = {});
+            explicit CacheEngine(context& context, const CacheSettings& settings = {});
             
             const std::string& fetch(const std::string& path);
             
-            std::string fetch(const std::string& path, const RuntimeContext& context);
+            std::string fetch(const std::string& path, const context& context);
     };
     
 }

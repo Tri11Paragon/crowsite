@@ -3,191 +3,19 @@
 #include <crowsite/utility.h>
 #include <crowsite/site/cache.h>
 #include <crowsite/beemovie.h>
-#include <crowsite/crow_utility.h>
 #include <crowsite/requests/jellyfin.h>
 #include <crowsite/requests/curl.h>
 #include <blt/parse/argparse.h>
 #include <crowsite/site/auth.h>
-#include <crow/middlewares/session.h>
-#include <crow/middlewares/cookie_parser.h>
+#include <crowsite/site/home.h>
 #include <crowsite/site/posts.h>
-#include <crowsite/util/memory_reader.h>
+#include <crowsite/util/crow_log.h>
+#include <crowsite/util/crow_conversion.h>
 
-using Session = crow::SessionMiddleware<crow::FileStore>;
-using CrowApp = crow::App<crow::CookieParser, Session>;
-
-class BLT_CrowLogger : public crow::ILogHandler
-{
-    public:
-        void log(std::string message, crow::LogLevel crow_level) final
-        {
-            blt::logging::log_level blt_level = blt::logging::log_level::NONE;
-            switch (crow_level)
-            {
-                case crow::LogLevel::DEBUG:
-                    blt_level = blt::logging::log_level::DEBUG;
-                    break;
-                case crow::LogLevel::INFO:
-                    blt_level = blt::logging::log_level::INFO;
-                    break;
-                case crow::LogLevel::WARNING:
-                    blt_level = blt::logging::log_level::WARN;
-                    break;
-                case crow::LogLevel::ERROR:
-                    blt_level = blt::logging::log_level::ERROR;
-                    break;
-                case crow::LogLevel::CRITICAL:
-                    blt_level = blt::logging::log_level::FATAL;
-                    break;
-            }
-            BLT_LOG("Crow: %s", blt_level, message.c_str());
-        }
-};
-
-struct site_params
-{
-    CrowApp& app;
-    cs::CacheEngine& engine;
-    const crow::request& req;
-    const std::string& name;
-};
-
-/**
- * Note this function destroys the user's session and any login related cookies!
- */
-void destroyUserSession(CrowApp& app, const crow::request& req)
-{
-    auto& session = app.get_context<Session>(req);
-    auto& cookie_context = app.get_context<crow::CookieParser>(req);
-    
-    session.set("clientID", "");
-    session.set("clientToken", "");
-    cookie_context.set_cookie("clientID", "");
-    cookie_context.set_cookie("clientToken", "");
-}
-
-bool checkAndUpdateUserSession(CrowApp& app, const crow::request& req)
-{
-    auto& session = app.get_context<Session>(req);
-    auto& cookie_context = app.get_context<crow::CookieParser>(req);
-    
-    auto s_clientID = session.get("clientID", "");
-    auto s_clientToken = session.get("clientToken", "");
-    
-    auto c_clientID = cookie_context.get_cookie("clientID");
-    auto c_clientToken = cookie_context.get_cookie("clientToken");
-    
-    if ((!c_clientID.empty() && !c_clientToken.empty()) && (s_clientID != c_clientID || s_clientToken != c_clientToken))
-    {
-        session.set("clientID", c_clientID);
-        session.set("clientToken", c_clientToken);
-        return true;
-    }
-    return false;
-}
-
-bool isUserLoggedIn(CrowApp& app, const crow::request& req)
-{
-    auto& session = app.get_context<Session>(req);
-    auto s_clientID = session.get("clientID", "");
-    auto s_clientToken = session.get("clientToken", "");
-    return cs::isUserLoggedIn(s_clientID, s_clientToken);
-}
-
-bool isUserAdmin(CrowApp& app, const crow::request& req)
-{
-    auto& session = app.get_context<Session>(req);
-    auto s_clientID = session.get("clientID", "");
-    return cs::isUserAdmin(cs::getUserFromID(s_clientID));
-}
-
-void generateRuntimeContext(const site_params& params, cs::RuntimeContext& context)
-{
-    auto& session = params.app.get_context<Session>(params.req);
-    auto s_clientID = session.get("clientID", "");
-    auto s_clientToken = session.get("clientToken", "");
-    if (cs::isUserLoggedIn(s_clientID, s_clientToken))
-    {
-        auto username = cs::getUserFromID(s_clientID);
-        auto perms = cs::getUserPermissions(username);
-        auto isAdmin = cs::isUserAdmin(username);
-        context["_logged_in"] = "True";
-        context["_username"] = username;
-        if (isAdmin)
-            context["_admin"] = "True";
-        if (perms & cs::PERM_READ_FILES)
-            context["_read_files"] = "True";
-        if (perms & cs::PERM_WRITE_FILES)
-            context["_write_files"] = "True";
-        if (perms & cs::PERM_CREATE_POSTS)
-            context["_create_posts"] = "True";
-        if (perms & cs::PERM_CREATE_COMMENTS)
-            context["_create_comments"] = "True";
-        if (perms & cs::PERM_CREATE_SHARES)
-            context["_create_shares"] = "True";
-        if (perms & cs::PERM_EDIT_POSTS)
-            context["_edit_posts"] = "True";
-        if (perms & cs::PERM_EDIT_COMMENTS)
-            context["_edit_comments"] = "True";
-    }
-}
-
-crow::response handle_root_page(const site_params& params)
-{
-    //auto page = crow::mustache::load("index.html"); //
-    //return "<html><head><title>Hello There</title></head><body><h1>Suck it " + name + "</h1></body></html>";
-//                BLT_TRACE(req.body);
-//                for (const auto& h : req.headers)
-//                    BLT_TRACE("Header: %s = %s", h.first.c_str(), h.second.c_str());
-//                BLT_TRACE(req.raw_url);
-//                BLT_TRACE(req.url);
-//                BLT_TRACE(req.remote_ip_address);
-//                for (const auto& v : req.url_params.keys())
-//                    BLT_TRACE("URL: %s = %s", v.c_str(), req.url_params.get(v));
-    if (params.name.ends_with(".html"))
-    {
-        checkAndUpdateUserSession(params.app, params.req);
-        auto& session = params.app.get_context<Session>(params.req);
-        auto s_clientID = session.get("clientID", "");
-        auto s_clientToken = session.get("clientToken", "");
-        auto user_perms = cs::getUserPermissions(cs::getUserFromID(s_clientID));
-        
-        crow::mustache::context ctx;
-        cs::RuntimeContext context;
-        
-        generateRuntimeContext(params, context);
-        
-        // pass perms in
-        if (user_perms & cs::PERM_ADMIN)
-            ctx["_admin"] = true;
-        
-        if (cs::isUserLoggedIn(s_clientID, s_clientToken))
-        {
-            ctx["_logged_in"] = true;
-        } else
-        {
-            ctx["_not_logged_in"] = true;
-        }
-        
-        // we don't want to pass all get parameters to the context to prevent leaking information
-        auto referer = params.req.url_params.get("referer");
-        if (referer)
-            ctx["referer"] = referer;
-        auto page = crow::mustache::compile(params.engine.fetch(params.name, context));
-        return page.render(ctx);
-    }
-    
-    return params.engine.fetch("default.html");
-}
-
-crow::response handle_auth_page(const site_params& params)
-{
-    if (isUserAdmin(params.app, params.req))
-        return cs::redirect("/login.html");
-    
-    
-    return handle_root_page(params);
-}
+#define CS_SESSION cs::checkAndUpdateUserSession(app, req); \
+                    auto& session = app.get_context<Session>(req); \
+                    auto s_clientID = session.get("clientID", ""); \
+                    auto s_clientToken = session.get("clientToken", ""); \
 
 int main(int argc, const char** argv)
 {
@@ -207,7 +35,7 @@ int main(int argc, const char** argv)
     cs::auth::init();
     
     BLT_INFO("Starting site %s.", SITE_NAME);
-    crow::mustache::set_global_base(SITE_FILES_PATH);
+    crow::mustache::set_global_base(CROWSITE_FILES_PATH);
     static BLT_CrowLogger bltCrowLogger{};
     crow::logger::setHandler(&bltCrowLogger);
     
@@ -221,26 +49,28 @@ int main(int argc, const char** argv)
             // set session id length (small value only for demonstration purposes)
             16,
             // init the store
-            crow::FileStore{std::string(SITE_FILES_PATH) + "/data/session", session_age}}};
+            crow::FileStore{std::string(CROWSITE_FILES_PATH) + "/data/session", session_age}}};
     app.use_compression(crow::compression::GZIP);
     app.loglevel(crow::LogLevel::WARNING);
     
     BLT_INFO("Creating static context");
     
-    cs::StaticContext context;
-    context["SITE_TITLE"] = SITE_TITLE;
-    context["SITE_NAME"] = SITE_NAME;
-    context["SITE_VERSION"] = SITE_VERSION;
-    context["BEE_MOVIE"] = beemovie_script;
-    context["SITE_BACKGROUND"] = "/static/images/backgrounds/2023-05-26_23.18.23.png";
-    context["MENU_BAR_COLOR"] = "#335";
-    context["MENU_BAR_HOVER"] = "#223";
-    context["MENU_BAR_ACTIVE"] = "#7821be";
+    cs::context static_context;
+    static_context["SITE_TITLE"] = SITE_TITLE;
+    static_context["SITE_NAME"] = SITE_NAME;
+    static_context["SITE_VERSION"] = SITE_VERSION;
+    static_context["BEE_MOVIE"] = beemovie_script;
+    static_context["SITE_BACKGROUND"] = "/static/images/backgrounds/2023-05-26_23.18.23.png";
+    static_context["MENU_BAR_COLOR"] = "#335";
+    static_context["MENU_BAR_HOVER"] = "#223";
+    static_context["MENU_BAR_ACTIVE"] = "#7821be";
     
     BLT_INFO("Starting cache engine");
     
     cs::CacheSettings settings;
-    cs::CacheEngine engine(context, settings);
+    cs::CacheEngine engine(static_context, settings);
+    
+    cs::posts_init();
     
     BLT_INFO("Creating routes");
     
@@ -255,22 +85,22 @@ int main(int argc, const char** argv)
     
     CROW_ROUTE(app, "/login.html")(
             [&app, &engine](const crow::request& req) -> crow::response {
-                if (isUserLoggedIn(app, req))
+                if (cs::isUserLoggedIn(app, req))
                     return cs::redirect("/");
-                return handle_root_page({app, engine, req, "login.html"});
+                return cs::handle_root_page({app, engine, req, "login.html"});
             }
     );
     
     CROW_ROUTE(app, "/logout.html")(
             [&app](const crow::request& req) -> crow::response {
-                destroyUserSession(app, req);
+                cs::destroyUserSession(app, req);
                 return cs::redirect("/");
             }
     );
     
     CROW_ROUTE(app, "/<string>")(
             [&app, &engine](const crow::request& req, const std::string& name) -> crow::response {
-                return handle_root_page({app, engine, req, name});
+                return cs::handle_root_page({app, engine, req, name});
             }
     );
     
@@ -314,29 +144,27 @@ int main(int argc, const char** argv)
     
     CROW_ROUTE(app, "/projects/<path>")(
             [&engine, &app](const crow::request& req, const std::string& path) {
-                checkAndUpdateUserSession(app, req);
-                auto& session = app.get_context<Session>(req);
-                auto s_clientID = session.get("clientID", "");
-                auto s_clientToken = session.get("clientToken", "");
+                CS_SESSION;
                 
-                return cs::handleProjectPage({engine, req, s_clientID, s_clientToken, path});
+                return toResponse(
+                        cs::handleProjectPage({req.raw_url, s_clientID, s_clientToken, path, cs::toQueryString(req.url_params.getValues()), engine}));
             }
     );
     
     CROW_ROUTE(app, "/projects/")(
             [&engine, &app](const crow::request& req) {
-                checkAndUpdateUserSession(app, req);
-                auto& session = app.get_context<Session>(req);
-                auto s_clientID = session.get("clientID", "");
-                auto s_clientToken = session.get("clientToken", "");
+                CS_SESSION;
                 
-                return cs::handleProjectPage({engine, req, s_clientID, s_clientToken, "index.html"});
+                return toResponse(
+                        cs::handleProjectPage(
+                                {req.raw_url, s_clientID, s_clientToken, "index.html", cs::toQueryString(req.url_params.getValues()), engine}
+                        ));
             }
     );
     
     CROW_ROUTE(app, "/")(
             [&engine, &app](const crow::request& req) {
-                return handle_root_page({app, engine, req, "index.html"});
+                return cs::handle_root_page({app, engine, req, "index.html"});
             }
     );
     
@@ -362,6 +190,8 @@ int main(int argc, const char** argv)
     auto port = blt::arg_parse::get_cast<int32_t>(args["port"]);
     BLT_INFO("Starting Crow website on port %d", port);
     app.port(port).multithreaded().run();
+    
+    cs::posts_cleanup();
     
     cs::requests::cleanup();
     cs::auth::cleanup();

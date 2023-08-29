@@ -4,6 +4,7 @@
  * See LICENSE file for license detail
  */
 #include <crowsite/site/posts.h>
+#include <crowsite/site/auth.h>
 #include <crowsite/utility.h>
 #include <crowsite/util/md_to_html.h>
 #include <blt/std/logging.h>
@@ -11,7 +12,7 @@
 namespace cs
 {
     
-    crow::response handleProjectPage(const request_info& req)
+    response_info handleProjectPage(const request_info& req)
     {
         std::string buffer;
         buffer += "<html><head></head><body>";
@@ -19,9 +20,18 @@ namespace cs
         buffer += htmlData;
         buffer += "</body>";
         
-        return buffer;
+        return {buffer};
     }
     
+    void posts_init()
+    {
+    
+    }
+    
+    void posts_cleanup()
+    {
+    
+    }
     
     
 }

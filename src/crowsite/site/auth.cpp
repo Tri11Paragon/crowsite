@@ -4,6 +4,7 @@
 #include <crowsite/site/auth.h>
 #include <crowsite/config.h>
 #include <crowsite/requests/jellyfin.h>
+#include <crowsite/utility.h>
 #include "blt/std/logging.h"
 #include "blt/std/uuid.h"
 #include <openssl/sha.h>
@@ -190,7 +191,7 @@ namespace cs
     void auth::init()
     {
         // TODO: proper multithreading
-        auto path = (std::string(SITE_FILES_PATH) + "/data/db/");
+        auto path = cs::fs::createDataFilePath("db/");
         auto dbname = "users.sqlite";
         auto full_path = path + dbname;
         BLT_TRACE("Using %s for users database", full_path.c_str());

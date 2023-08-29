@@ -9,10 +9,10 @@
 #include <blt/std/hashmap.h>
 
 //#define CROW_STATIC_DIRECTORY "/home/brett/projects/cpp/crowsite/crow_test/static/"
-#define CROW_STATIC_DIRECTORY "/home/brett/Documents/code/c++/crowsite/crow_test/static/"
+#define CROWSITE_STATIC_DIRECTORY "/home/brett/Documents/code/c++/crowsite/crow_test/static/"
 //#define SITE_FILES_PATH "/home/brett/projects/cpp/crowsite/crow_test"
-#define SITE_FILES_PATH "/home/brett/Documents/code/c++/crowsite/crow_test"
-#define CROW_STATIC_ENDPOINT "/static/<path>"
+#define CROWSITE_FILES_PATH "/home/brett/Documents/code/c++/crowsite/crow_test"
+#define CROWSITE_STATIC_ENDPOINT "/static/<path>"
 
 #define MILES_SITE
 #undef MILES_SITE

@@ -47,7 +47,7 @@ namespace cs {
             
             std::string str()
             {
-                std::string out (buffer, buffer + used_size);
+                std::string out (buffer, used_size);
                 return out;
             }
     };

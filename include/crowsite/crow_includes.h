@@ -6,6 +6,6 @@
 #define CROWSITE_CROW_INCLUDES_H
 
 #include <crowsite/config.h>
-#include "crow.h"
+#include <crowsite/crow_pch.h>
 
 #endif //CROWSITE_CROW_INCLUDES_H

@@ -11,6 +11,8 @@ set(CROW_FEATURES compression)
 cmake_policy(SET CMP0057 NEW)
 #find_package(Crow)
 
+set(PRECOMPILED_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/include/crowsite/crow_pch.h")
+
 set(CROW_BUILD_TESTS OFF)
 set(CROW_BUILD_EXAMPLES OFF)
 set(CROW_INSTALL OFF)
@@ -43,7 +45,7 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 
 file(GLOB_RECURSE source_files src/*.cpp)
 
-add_executable(crowsite ${source_files})
+add_executable(crowsite ${source_files} ${PRECOMPILED_HEADER})
 
 target_compile_definitions(crowsite PUBLIC CROW_ENABLE_COMPRESSION)
 
@@ -70,3 +72,5 @@ if (${ENABLE_TSAN} MATCHES ON)
     target_compile_options(crowsite PRIVATE -fsanitize=thread)
     target_link_options(crowsite PRIVATE -fsanitize=thread)
 endif ()
+
+target_precompile_headers(crowsite PRIVATE ${PRECOMPILED_HEADER})

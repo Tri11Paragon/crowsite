@@ -55,7 +55,7 @@ namespace cs
     {
         std::string createStaticFilePath(const std::string& file)
         {
-            auto path = std::string(CROW_STATIC_DIRECTORY);
+            auto path = std::string(CROWSITE_STATIC_DIRECTORY);
             if (!path.ends_with('/'))
                 path += '/';
             path += file;
@@ -67,7 +67,7 @@ namespace cs
         
         std::string createWebFilePath(const std::string& file)
         {
-            auto path = std::string(SITE_FILES_PATH);
+            auto path = std::string(CROWSITE_FILES_PATH);
             if (!path.ends_with('/'))
                 path += '/';
             path += "webcontent/";
@@ -79,7 +79,7 @@ namespace cs
         
         std::string createDataFilePath(const std::string& file)
         {
-            auto path = std::string(SITE_FILES_PATH);
+            auto path = std::string(CROWSITE_FILES_PATH);
             if (!path.ends_with('/'))
                 path += '/';
             path += "data/";

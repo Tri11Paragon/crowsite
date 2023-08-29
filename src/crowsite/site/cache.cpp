@@ -224,14 +224,14 @@ namespace cs
                         }
                     }
                     
-                    static inline bool isTrue(const RuntimeContext& context, const std::string& token)
+                    static inline bool isTrue(const context& context, const std::string& token)
                     {
                         //BLT_DEBUG("isTrue for token '%s' contains? %s", token.c_str(), context.contains(token) ? "True" : "False");
                         return context.contains(token) && !context.at(token).empty();
                     }
                     
                     // http://www.cs.unb.ca/~wdu/cs4613/a2ans.htm
-                    bool factor(const RuntimeContext& context)
+                    bool factor(const context& context)
                     {
                         if (!hasNextToken())
                         blt_throw(LexerSyntaxError("Processing boolean factor but no token was found!"));
@@ -256,7 +256,7 @@ namespace cs
                         }
                     }
                     
-                    bool expr(const RuntimeContext& context)
+                    bool expr(const context& context)
                     {
                         auto fac = factor(context);
                         if (!hasNextToken())
@@ -281,7 +281,7 @@ namespace cs
                         processString();
                     }
                     
-                    bool eval(const RuntimeContext& context)
+                    bool eval(const context& context)
                     {
                         return expr(context);
                     }
@@ -335,7 +335,7 @@ namespace cs
                 return tagLocations[0];
             }
             
-            static std::string searchAndReplace(const std::string& data, const RuntimeContext& context)
+            static std::string searchAndReplace(const std::string& data, const context& context)
             {
                 RuntimeLexer lexer(data);
                 std::string results;
@@ -373,7 +373,7 @@ namespace cs
                         if (lexer.hasTemplatePrefix('/'))
                             lexer.consumeToken();
                         else
-                            blt_throw(LexerSyntaxError("Ending token not found!"));
+                        blt_throw(LexerSyntaxError("Ending token not found!"));
                         
                     } else
                         results += lexer.consume();
@@ -389,8 +389,8 @@ namespace cs
         return (double) (v) / 1000000000.0;
     }
     
-    CacheEngine::CacheEngine(StaticContext& context, const CacheSettings& settings): m_Context(context),
-                                                                                     m_Settings((settings))
+    CacheEngine::CacheEngine(context& ctx, const CacheSettings& settings): m_Context(ctx),
+                                                                           m_Settings((settings))
     {}
     
     uint64_t CacheEngine::calculateMemoryUsage(const std::string& path, const CacheEngine::CacheValue& value)
@@ -571,7 +571,7 @@ namespace cs
         page.getRawSite() = resolvedSite;
     }
     
-    std::string CacheEngine::fetch(const std::string& path, const RuntimeContext& context)
+    std::string CacheEngine::fetch(const std::string& path, const context& context)
     {
         auto fetched = fetch(path);
         return RuntimeLexer::searchAndReplace(fetched, context);

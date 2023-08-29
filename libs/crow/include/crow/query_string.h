@@ -469,6 +469,11 @@ namespace crow
             }
             return ret;
         }
+        
+        inline const std::vector<char*>& getValues() const
+        {
+            return key_value_pairs_;
+        }
 
         std::vector<std::string> keys() const
         {
