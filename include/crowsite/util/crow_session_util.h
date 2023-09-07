@@ -14,6 +14,8 @@
 
 namespace cs
 {
+    constexpr auto session_age = 24 * 60 * 60;
+    constexpr auto cookie_age = 180 * 24 * 60 * 60;
     
     struct site_params
     {
@@ -36,5 +38,10 @@ namespace cs
     
     void generateRuntimeContext(const site_params& params, cs::context& context);
 }
+
+#define CS_SESSION cs::checkAndUpdateUserSession(app, req); \
+                    auto& session = app.get_context<Session>(req); \
+                    auto s_clientID = session.get("clientID", ""); \
+                    auto s_clientToken = session.get("clientToken", ""); \
 
 #endif //CROWSITE_CROW_SESSION_UTIL_H

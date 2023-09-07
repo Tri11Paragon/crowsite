@@ -8,6 +8,7 @@
 #ifndef CROWSITE_CROW_PCH_H
 #define CROWSITE_CROW_PCH_H
 
+#include <crowsite/config.h>
 #include "crow/query_string.h"
 #include "crow/http_parser_merged.h"
 #include "crow/ci_map.h"

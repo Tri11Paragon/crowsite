@@ -55,13 +55,13 @@ namespace cs
     {
         std::string createStaticFilePath(const std::string& file)
         {
-            auto path = std::string(CROWSITE_STATIC_DIRECTORY);
+            auto path = std::string(CROW_STATIC_DIRECTORY);
             if (!path.ends_with('/'))
                 path += '/';
             path += file;
             // prevent crow from hanging web responses when we make a typo in the filename
-            if (!std::filesystem::exists(path))
-                throw std::runtime_error("Unable to create file path because file does not exist!");
+            if (!std::filesystem::exists(path.substr(0, path.find_last_of('/'))))
+                throw std::runtime_error("Unable to create file path because path does not exist!");
             return path;
         }
         
@@ -72,8 +72,8 @@ namespace cs
                 path += '/';
             path += "webcontent/";
             path += file;
-            if (!std::filesystem::exists(path))
-                throw std::runtime_error("Unable to create file path because file does not exist!");
+            if (!std::filesystem::exists(path.substr(0, path.find_last_of('/'))))
+                throw std::runtime_error("Unable to create file path because folder does not exist!");
             return path;
         }
         
@@ -84,8 +84,8 @@ namespace cs
                 path += '/';
             path += "data/";
             path += file;
-            if (!std::filesystem::exists(path))
-                throw std::runtime_error("Unable to create file path because file does not exist!");
+            if (!std::filesystem::exists(path.substr(0, path.find_last_of('/'))))
+                throw std::runtime_error("Unable to create file path because folder does not exist!");
             return path;
         }
     }

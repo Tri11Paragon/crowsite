@@ -17,7 +17,7 @@ using namespace blt;
 
 namespace cs
 {
-    sqlite3* user_database;
+    cs::sql::database* user_database;
     
     // https://stackoverflow.com/questions/5288076/base64-encoding-and-decoding-with-openssl
     
@@ -191,27 +191,14 @@ namespace cs
     void auth::init()
     {
         // TODO: proper multithreading
-        auto path = cs::fs::createDataFilePath("db/");
-        auto dbname = "users.sqlite";
-        auto full_path = path + dbname;
-        BLT_TRACE("Using %s for users database", full_path.c_str());
-        std::filesystem::create_directories(path);
-        if (int err = sqlite3_open_v2(full_path.c_str(), &user_database,
-                                      SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE | SQLITE_OPEN_FULLMUTEX,
-                                      nullptr
-        ) != SQLITE_OK)
-        {
-            BLT_FATAL("Unable to create database connection! err %d msg %s", err, sqlite3_errstr(err));
-            std::exit(1);
-        }
+        const auto path = cs::fs::createDataFilePath("db/users.sqlite");
+        BLT_TRACE("Using %s for users database", path.c_str());
+        user_database = new sql::database(path);
         
         sql::statement v {
                 user_database,
                 "SELECT SQLITE_VERSION()"
         };
-        
-        if (v.fail())
-            BLT_WARN("Failed to create statement with error code: %d msg: %s", v.error(), sqlite3_errstr(v.error()));
         
         if (!v.execute())
             BLT_WARN("Failed to execute statement with error code: %d msg: %s", v.error(), sqlite3_errstr(v.error()));
@@ -237,6 +224,6 @@ namespace cs
     
     void auth::cleanup()
     {
-        sqlite3_close_v2(user_database);
+        delete(user_database);
     }
 }

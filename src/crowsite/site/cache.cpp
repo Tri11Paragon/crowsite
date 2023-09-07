@@ -136,6 +136,7 @@ namespace cs
                             case TokenType::CLOSE:
                                 return "CLOSE";
                         }
+                        throw LexerSyntaxError("Unable to determine type of token");
                     }
                     
                     struct Token
@@ -254,6 +255,7 @@ namespace cs
                             default:
                             blt_throw(LexerSyntaxError("Weird token found while parsing tokens, type: " + decodeName(next.type)));
                         }
+                        return false;
                     }
                     
                     bool expr(const context& context)
@@ -297,12 +299,7 @@ namespace cs
                     return false;
                 return str[index] == '{' && str[index + 1] == '{' && str[index + 2] == c;
             }
-            
-            static std::string consumeToEndTemplate(const std::string& tokenName)
-            {
-            
-            }
-            
+
             static void getTagLocations(std::vector<size_t>& tagLocations, const std::string& tag, const std::string& data)
             {
                 RuntimeLexer lexer(data);

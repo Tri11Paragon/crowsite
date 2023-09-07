@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <style>
+      {{@../static/css/menu_bar.css}}
+      {{@../static/css/body.css}}
+    </style>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="Brett">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{$SITE_TITLE}}</title>
+  </head>
+  {{@body_begin.part}}
+    <div class="body">
+        <div class="center">
+          {{CURRENT_POST}}
+        </div>
+    </div>
+  {{@body_end.part}}
+</html>
